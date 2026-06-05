@@ -1,0 +1,41 @@
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #eef2ff;
+}
+
+.login {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  width: 300px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.card input {
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.card button {
+  width: 100%;
+  padding: 10px;
+  background: #6c5bf1;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.card a {
+  color: #6c5bf1;
+  text-decoration: none;
+}

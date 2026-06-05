@@ -1,0 +1,38 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: #a3deef;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.left img {
+  height: 50px;
+  width: 80px;
+  border-radius: 10px;
+}
+
+.nav a {
+  margin-left: 10px;
+  text-decoration: none;
+  color: black;
+}
+
+.nav button {
+  margin-left: 10px;
+  background: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.nav span {
+  margin-left: 10px;
+}
