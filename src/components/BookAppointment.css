@@ -226,7 +226,58 @@ body{
   background:#1d4ed8;
 }
 
+/* CLINIC INFO */
+.clinic-info{
+  max-width: 900px;
+  margin: 0 auto 25px;
+}
+
+.clinic-info-card{
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(37, 99, 235, 0.12);
+  padding: 18px;
+}
+
+.clinic-info-card h3{
+  color:#0f172a;
+  margin-bottom: 6px;
+  font-size: 18px;
+}
+
+.muted{
+  color:#475569;
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+.clinic-grid{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.label{
+  font-size: 12px;
+  color:#64748b;
+  margin-bottom: 4px;
+}
+
+.value{
+  font-size: 14px;
+  color:#0f172a;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
 /* RESPONSIVE */
+@media(max-width:900px){
+  .clinic-grid{
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 @media(max-width:768px){
 
   .book-title{
@@ -241,4 +292,9 @@ body{
     padding:20px;
   }
 
+  .clinic-grid{
+    grid-template-columns: 1fr;
+  }
+
 }
+

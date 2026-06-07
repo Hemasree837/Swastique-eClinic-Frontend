@@ -1,10 +1,19 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./BookAppointment.css";
 
 function BookAppointment() {
+  const navigate = useNavigate();
 
-  const API = "http://localhost:8080";
+  const API = "https://swastique-eclinic-backend.onrender.com/appointment";
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const loggedIn = !!user;
+
+  useEffect(() => {
+    if (!loggedIn) navigate("/login");
+  }, [loggedIn, navigate]);
 
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,7 +24,14 @@ function BookAppointment() {
 
   const [patientName, setPatientName] = useState("");
 
-  const [step, setStep] = useState(1);
+const [step, setStep] = useState(1);
+
+  const clinicInfo = {
+    supportPhone: "+91 98765 43210",
+    supportEmail: "support@swastiqueclinic.com",
+    address: "123, Wellness Street, City, India",
+    hours: "Mon - Sat, 9:00 AM - 6:00 PM",
+  };
 
   useEffect(() => {
     fetchDoctors();
@@ -82,6 +98,33 @@ const bookAppointment = async () => {
       </h2>
       {step === 1 && (
         <>
+
+          {/* Clinic info */}
+          <div className="clinic-info">
+            <div className="clinic-info-card">
+              <h3>Need help?</h3>
+              <p className="muted">Contact our support team for any appointment-related questions.</p>
+
+              <div className="clinic-grid">
+                <div>
+                  <p className="label">Phone</p>
+                  <p className="value">{clinicInfo.supportPhone}</p>
+                </div>
+                <div>
+                  <p className="label">Email</p>
+                  <p className="value">{clinicInfo.supportEmail}</p>
+                </div>
+                <div>
+                  <p className="label">Address</p>
+                  <p className="value">{clinicInfo.address}</p>
+                </div>
+                <div>
+                  <p className="label">Hours</p>
+                  <p className="value">{clinicInfo.hours}</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
           {loading && (
             <p>Loading doctors...</p>

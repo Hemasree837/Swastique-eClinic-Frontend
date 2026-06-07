@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./Login.css";
+import API from "../api";
 
 export default function Login({ setUser }) {
   const [username, setUsername] = useState("");
@@ -16,10 +17,10 @@ export default function Login({ setUser }) {
     }
 
     try {
-      const res = await axios.post("http://localhost:8080/auth/login", {
-        username,
-        password,
-      });
+     const res = await axios.post(`${API}/auth/login`, {
+  username,
+  password
+  });
 
       const user = res.data;
 

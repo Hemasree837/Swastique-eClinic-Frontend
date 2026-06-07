@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./AnnouncementMarquee.css";
 
 const announcements = [
   { icon: "🎉", title: "Free First Consultation", desc: "First visit is FREE!", badge: "Offer" },
@@ -24,8 +25,10 @@ export default function AnnouncementMarquee() {
           {announcements.map((item, i) => (
             <div className="card" key={i}>
               <div className="icon">{item.icon}</div>
-              <h4>{item.title}</h4>
-              <p>{item.desc}</p>
+              <div className="card-content">
+                <h4>{item.title}</h4>
+                <div className="meta">{item.desc}</div>
+              </div>
               <span className="badge">{item.badge}</span>
             </div>
           ))}

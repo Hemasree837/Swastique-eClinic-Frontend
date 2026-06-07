@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 export default function Admin() {
-  const API = "http://localhost:8080";
+ const API = import.meta.env.VITE_API_URL || "https://swastique-eclinic-backend.onrender.com";
 
   const [tab, setTab] = useState("dashboard");
   const [doctors, setDoctors] = useState([]);
@@ -21,59 +21,79 @@ export default function Admin() {
   }, []);
 
   const fetchDoctors = async () => {
-    const res = await axios.get(`${API}/doctor`);
-    setDoctors(res.data);
+    try {
+      const res = await axios.get(`${API}/doctor`);
+      setDoctors(res.data);
+    } catch (err) {
+      console.error("Error fetching doctors:", err);
+      alert("Failed to fetch doctors");
+    }
   };
 
   const fetchAppointments = async () => {
-    const res = await axios.get(`${API}/appointment`);
-    setAppointments(res.data);
+    try {
+      const res = await axios.get(`${API}/appointment`);
+      setAppointments(res.data);
+    } catch (err) {
+      console.error("Error fetching appointments:", err);
+      alert("Failed to fetch appointments");
+    }
   };
 
   const addDoctor = async () => {
-    if (
-      !name ||
-      !spec ||
-      !experience ||
-      !slots ||
-      !imageUrl
-    ) {
-      alert("Fill all fields");
+    if (!name || !spec || !experience || !slots) {
+      alert("Please fill in name, specialization, experience and slots.");
       return;
     }
 
-    await axios.post(`${API}/doctor`, {
-      name,
-      specialization: spec,
-      experience,
-      imageUrl,
-      availableSlots: slots.split(","),
-      onLeave: false,
-    });
-
-    clearForm();
-    fetchDoctors();
+    try {
+      await axios.post(`${API}/doctor`, {
+        name,
+        specialization: spec,
+        experience,
+        imageUrl,
+        availableSlots: slots.split(","),
+        onLeave: false,
+      });
+      alert("Doctor added successfully!");
+      clearForm();
+      fetchDoctors();
+    } catch (err) {
+      console.error("Error adding doctor:", err);
+      alert("Failed to add doctor: " + (err.response?.data?.message || err.message));
+    }
   };
 
   const updateDoctor = async () => {
-    await axios.put(`${API}/doctor/${editId}`, {
-      name,
-      specialization: spec,
-      experience,
-      imageUrl,
-      availableSlots: slots.split(","),
-    });
-
-    clearForm();
-    setEditId(null);
-    fetchDoctors();
+    try {
+      await axios.put(`${API}/doctor/${editId}`, {
+        name,
+        specialization: spec,
+        experience,
+        imageUrl,
+        availableSlots: slots.split(","),
+      });
+      alert("Doctor updated successfully!");
+      clearForm();
+      setEditId(null);
+      fetchDoctors();
+    } catch (err) {
+      console.error("Error updating doctor:", err);
+      alert("Failed to update doctor: " + (err.response?.data?.message || err.message));
+    }
   };
 
   const deleteDoctor = async (id) => {
     if (!window.confirm("Delete doctor?")) return;
 
-    await axios.delete(`${API}/doctor/${id}`);
-    fetchDoctors();
+    try {
+      await axios.delete(`${API}/doctor/${id}`);
+      alert("Doctor deleted successfully!");
+      fetchDoctors();
+    } catch (err) {
+      console.error("Error deleting doctor:", err);
+      alert("Failed to delete doctor: " + (err.response?.data?.message || err.message));
+    }
   };
 
   const clearForm = () => {
@@ -106,14 +126,16 @@ export default function Admin() {
         {tab === "dashboard" && (
           <div>
             <h2>Dashboard</h2>
-
-            <p>
-              Total Doctors : {doctors.length}
-            </p>
-
-            <p>
-              Total Appointments : {appointments.length}
-            </p>
+            <div className="dashboard-stats">
+              <div className="stat-card">
+                <h3>Total Doctors</h3>
+                <div className="value">{doctors.length}</div>
+              </div>
+              <div className="stat-card">
+                <h3>Total Appointments</h3>
+                <div className="value">{appointments.length}</div>
+              </div>
+            </div>
           </div>
         )}
 
@@ -158,7 +180,7 @@ export default function Admin() {
               />
 
               <input
-                placeholder="Image URL"
+                placeholder="Image URL (optional)"
                 value={imageUrl}
                 onChange={(e) =>
                   setImageUrl(e.target.value)
@@ -176,6 +198,7 @@ export default function Admin() {
                       setEditId(null);
                       clearForm();
                     }}
+                    style={{ background: "rgba(239, 68, 68, 0.1)", color: "#dc2626" }}
                   >
                     Cancel
                   </button>
@@ -187,107 +210,97 @@ export default function Admin() {
               )}
             </div>
 
-            <hr />
+            <div className="doctors-list">
+              {doctors.map((d) => (
+                <div className="card" key={d.id}>
+                  <div style={{ textAlign: "center" }}>
+                    <div className="admin-avatar">
+                      {d.imageUrl ? (
+                        <img
+                          src={d.imageUrl}
+                          alt={d.name}
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.style.display = "none";
+                          }}
+                        />
+                      ) : (
+                        <div className="admin-initials">{d.name?.split(" ").map((x) => x[0]).slice(0, 2).join("")}</div>
+                      )}
+                    </div>
+                    <h3>{d.name}</h3>
+                    <p style={{ color: "var(--accent)", fontWeight: "600", margin: "8px 0 12px 0" }}>{d.specialization}</p>
+                  </div>
 
-            {doctors.map((d) => (
-              <div className="card" key={d.id}>
+                  <p><strong>Experience:</strong> {d.experience} Years</p>
 
-                <img
-                  src={d.imageUrl}
-                  alt={d.name}
-                  width="100"
-                  height="100"
-                />
+                  <p>
+                    {d.onLeave
+                      ? "🔴 On Leave"
+                      : "🟢 Available"}
+                  </p>
 
-                <h3>{d.name}</h3>
+                  <p><strong>Slots:</strong> {d.availableSlots?.join(", ")}</p>
 
-                <p>{d.specialization}</p>
+                  <div className="card-actions">
+                    <button
+                      onClick={() => {
+                        setName(d.name);
+                        setSpec(d.specialization);
+                        setExperience(d.experience);
+                        setSlots(
+                          d.availableSlots?.join(",")
+                        );
+                        setImageUrl(d.imageUrl);
+                        setEditId(d.id);
+                      }}
+                    >
+                      Edit
+                    </button>
 
-                <p>
-                  {d.experience} Years Experience
-                </p>
+                    <button
+                      onClick={() =>
+                        deleteDoctor(d.id)
+                      }
+                    >
+                      Delete
+                    </button>
+                  </div>
 
-                <p>
-                  {d.onLeave
-                    ? "🔴 On Leave"
-                    : "🟢 Available"}
-                </p>
-
-                <p>
-                  Slots :
-                  {" "}
-                  {d.availableSlots?.join(", ")}
-                </p>
-
-                <button
-                  onClick={() => {
-                    setName(d.name);
-                    setSpec(d.specialization);
-                    setExperience(d.experience);
-                    setSlots(
-                      d.availableSlots?.join(",")
-                    );
-                    setImageUrl(d.imageUrl);
-                    setEditId(d.id);
-                  }}
-                >
-                  Edit
-                </button>
-
-                <button
-                  onClick={() =>
-                    deleteDoctor(d.id)
-                  }
-                >
-                  Delete
-                </button>
-
-              </div>
-            ))}
+                </div>
+              ))}
+            </div>
 
           </div>
         )}
 
         {tab === "appointments" && (
           <div>
-
             <h2>Appointments</h2>
 
             {appointments.length === 0 ? (
-              <p>No appointments found</p>
+              <div className="empty-state">
+                <p>No appointments found</p>
+              </div>
             ) : (
-              appointments.map((a) => (
-                <div
-                  className="card"
-                  key={a.id}
-                >
-                  <h4>{a.patientName}</h4>
-
-                  <p>
-                    Doctor :
-                    {" "}
-                    {a.doctorName}
-                  </p>
-
-                  <p>
-                    Date :
-                    {" "}
-                    {a.date}
-                  </p>
-
-                  <p>
-                    Time :
-                    {" "}
-                    {a.time}
-                  </p>
-
-                  <p>
-                    Status :
-                    {" "}
-                    {a.status}
-                  </p>
+              <div className="appointments-table">
+                <div className="appointments-header">
+                  <div>Patient Name</div>
+                  <div>Doctor Name</div>
+                  <div>Date</div>
+                  <div>Time</div>
+                  <div>Status</div>
                 </div>
-              ))
+                {appointments.map((a) => (
+                  <div className="appointment-item" key={a.id}>
+                    <p><strong>{a.patientName}</strong></p>
+                    <p>{a.doctorName}</p>
+                    <p>{a.date}</p>
+                    <p>{a.time}</p>
+                    <div className="status-badge">{a.status}</div>
+                  </div>
+                ))}
+              </div>
             )}
 
           </div>

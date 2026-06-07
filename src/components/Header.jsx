@@ -12,29 +12,32 @@ export default function Header({ user, setUser }) {
   };
 
   return (
-    <div className="header">
+    <header className="header">
 
-      <div className="left">
-        <img src={logo} alt="logo" />
-        <h2>Swastiq eClinic</h2>
-      </div>
+      <Link to="/" className="left">
+        <img src={logo} alt="Swastiq eClinic logo" />
+        <span className="brand">Swastiq eClinic</span>
+      </Link>
 
-      <div className="nav">
+      <nav className="nav">
         <Link to="/">Home</Link>
         <Link to="/OurDoctors">Doctors</Link>
         <Link to="/BookAppointment">Book</Link>
 
-        {!user && <Link to="/login">Login</Link>}
-        {!user && <Link to="/register">Register</Link>}
+        {user?.role === "ADMIN" && <Link to="/admin">Admin</Link>}
+        {user?.role === "PATIENT" && <Link to="/patient">Dashboard</Link>}
+
+        {!user && <Link className="btn-link" to="/login">Login</Link>}
+        {!user && <Link className="btn-primary" to="/register">Register</Link>}
 
         {user && (
-          <>
-            <span>Hi, {user.username}</span>
-            <button onClick={logout}>Logout</button>
-          </>
+          <div className="user-area">
+            <span className="greet">Hi, {user.username}</span>
+            <button className="logout" onClick={logout}>Logout</button>
+          </div>
         )}
-      </div>
+      </nav>
 
-    </div>
+    </header>
   );
 }
