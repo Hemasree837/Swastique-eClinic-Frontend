@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import API from "../api";
 import "./Patient.css";
 
 export default function Patient({ user }) {
-  const API = "https://swastique-eclinic-backend.onrender.com/";
   const name = user?.username;
 
   const [doctors, setDoctors] = useState([]);

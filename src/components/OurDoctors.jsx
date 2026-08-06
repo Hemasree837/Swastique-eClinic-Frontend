@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import API from "../api";
 import "./OurDoctors.css";
 
 function getInitials(name) {
@@ -38,7 +39,7 @@ export default function OurDoctors() {
 
   const getDoctors = async () => {
     try {
-      const res = await axios.get("https://swastique-eclinic-backend.onrender.com/doctor");
+      const res = await axios.get(`${API}/doctor`);
       setDoctors(res.data);
     } catch (err) {
       console.log(err);

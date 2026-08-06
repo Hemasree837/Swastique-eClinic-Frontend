@@ -16,7 +16,14 @@ import BookAppointment from "./components/BookAppointment";
 import "./App.css";
 
 export default function App() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem("user");
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
 
   return (
     <Router>

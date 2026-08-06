@@ -1,12 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API from "../api";
 import "./BookAppointment.css";
 
 function BookAppointment() {
   const navigate = useNavigate();
-
-  const API = "https://swastique-eclinic-backend.onrender.com/appointment";
 
   const user = JSON.parse(localStorage.getItem("user"));
   const loggedIn = !!user;

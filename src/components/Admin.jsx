@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import API from "../api";
 
 export default function Admin() {
- const API = import.meta.env.VITE_API_URL || "https://swastique-eclinic-backend.onrender.com";
 
   const [tab, setTab] = useState("dashboard");
   const [doctors, setDoctors] = useState([]);

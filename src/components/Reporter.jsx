@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import API from "../api";
 import "./Reporter.css";
 
 export default function Reporter() {
-  const API = "http://localhost:8080";
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
