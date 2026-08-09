@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import "./Login.css";
+import logo from "../assets/logo.jpeg";
 import API from "../api";
+import "./Login.css";
 
 export default function Login({ setUser }) {
   const [username, setUsername] = useState("");
@@ -12,11 +13,12 @@ export default function Login({ setUser }) {
 
   const navigate = useNavigate();
 
-  const login = async () => {
+  const handleLogin = async (e) => {
+    if (e) e.preventDefault();
     setError("");
 
     if (!username.trim() || !password) {
-      setError("Please enter username and password");
+      setError("Please enter your username and password");
       return;
     }
 
@@ -35,6 +37,7 @@ export default function Login({ setUser }) {
 
       if (user.role === "ADMIN") navigate("/admin");
       else if (user.role === "PATIENT") navigate("/patient");
+      else if (user.role === "REPORTER") navigate("/reporter");
       else navigate("/");
     } catch (err) {
       console.error("Login error:", err);
@@ -45,9 +48,9 @@ export default function Login({ setUser }) {
       if (serverMsg) {
         setError(serverMsg);
       } else if (err.code === "ERR_NETWORK") {
-        setError("Network error: Backend is starting up on Render (~45s). Please wait and try again.");
+        setError("Connecting to live backend... If server is starting up, please wait ~30s and try again.");
       } else {
-        setError("Invalid username or password.");
+        setError("Invalid username or password. Please try again.");
       }
     } finally {
       setLoading(false);
@@ -55,39 +58,57 @@ export default function Login({ setUser }) {
   };
 
   return (
-    <div className="login">
-      <div className="card">
-        <h2>Swastiq eClinic</h2>
-        <p>Login</p>
+    <div className="auth-page">
+      <div className="auth-card glass-card">
+        <div className="auth-header">
+          <div className="auth-logo-frame">
+            <img src={logo} alt="Swastiq eClinic" className="auth-logo" />
+          </div>
+          <h2>Welcome Back</h2>
+          <p className="auth-subtitle">Log in to your Swastiq eClinic account</p>
+        </div>
 
         {error && (
-          <div style={{ color: "#dc2626", background: "#fee2e2", padding: "10px", borderRadius: "6px", marginBottom: "12px", fontSize: "14px", textAlign: "center" }}>
-            {error}
+          <div className="auth-error-banner">
+            <span className="error-icon">⚠️</span>
+            <span>{error}</span>
           </div>
         )}
 
-        <input
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          disabled={loading}
-        />
+        <form onSubmit={handleLogin} className="auth-form">
+          <div className="input-group">
+            <label className="input-label">Username</label>
+            <input
+              type="text"
+              placeholder="Enter your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              disabled={loading}
+              autoFocus
+            />
+          </div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          disabled={loading}
-        />
+          <div className="input-group">
+            <label className="input-label">Password</label>
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={loading}
+            />
+          </div>
 
-        <button onClick={login} disabled={loading} style={{ opacity: loading ? 0.7 : 1 }}>
-          {loading ? "Logging in..." : "Login"}
-        </button>
+          <button type="submit" className="btn-auth-submit" disabled={loading}>
+            {loading ? "Authenticating..." : "Log In to Account"}
+          </button>
+        </form>
 
-        <p>
-          New user? <Link to="/register">Register</Link>
-        </p>
+        <div className="auth-footer">
+          <p>
+            New to Swastiq eClinic? <Link to="/register" className="auth-link">Create an account</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

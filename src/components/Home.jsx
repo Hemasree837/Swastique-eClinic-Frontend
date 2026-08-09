@@ -1,51 +1,144 @@
+import { Link } from "react-router-dom";
 import bg from "../assets/bg.jpg";
+import heroImg from "../assets/hero.png";
 import AnnouncementMarquee from "./AnnouncementMarquee";
 import "./Home.css";
 
-export default function Home() {
-  return (
-    <div className="home">
-      <section className="hero">
-        <div className="hero-inner">
-          <span className="badge">Swastiq eClinic</span>
-          <h1>
-            Your trusted first stop to
-            <br />
-            <span className="em">better health</span>
-          </h1>
-          <p className="lead">
-            Access modern primary care 24x7 and get protected with comprehensive services
-            at pocket-friendly prices. Schedule appointments, consult with specialists,
-            and manage your health from one simple dashboard.
-          </p>
+const specialties = [
+  { icon: "🫀", title: "Cardiology", desc: "Heart health & blood pressure care" },
+  { icon: "🩺", title: "General Medicine", desc: "Primary consultations & fever checks" },
+  { icon: "👶", title: "Pediatrics", desc: "Comprehensive child care & vaccines" },
+  { icon: "🧠", title: "Neurology", desc: "Brain & nervous system specialists" },
+  { icon: "🧴", title: "Dermatology", desc: "Skin, hair & allergy treatments" },
+  { icon: "🦴", title: "Orthopedics", desc: "Bone, joint & spine physical care" },
+];
 
-          <div className="hero-cta">
-            <a className="cta-primary" href="/login">Consult Our Doctors</a>
-            <a className="cta-secondary" href="/OurDoctors">Explore Our Plans</a>
+export default function Home({ user }) {
+  return (
+    <div className="home-container">
+      {/* Hero Section */}
+      <section className="hero-section">
+        <div className="hero-grid">
+          <div className="hero-content">
+            <span className="hero-badge">
+              <span className="badge-sparkle">✨</span> Modern Healthcare Platform
+            </span>
+
+            <h1 className="hero-title">
+              Your Trusted First Stop To <span className="gradient-text">Better Health</span>
+            </h1>
+
+            <p className="hero-lead">
+              Access 24/7 tele-consultations, book instant appointments with certified specialists, and manage your family's health records from one simple dashboard.
+            </p>
+
+            <div className="hero-actions">
+              <Link to="/BookAppointment" className="btn-hero-primary">
+                📅 Book Appointment
+              </Link>
+              <Link to="/OurDoctors" className="btn-hero-secondary">
+                👨‍⚕️ View Doctors Roster
+              </Link>
+            </div>
+
+            {/* Stat Counters */}
+            <div className="hero-stats">
+              <div className="stat-card">
+                <span className="stat-value">10,000+</span>
+                <span className="stat-label">Happy Patients</span>
+              </div>
+              <div className="stat-divider"></div>
+              <div className="stat-card">
+                <span className="stat-value">50+</span>
+                <span className="stat-label">Verified Specialists</span>
+              </div>
+              <div className="stat-divider"></div>
+              <div className="stat-card">
+                <span className="stat-value">4.9 ★</span>
+                <span className="stat-label">Patient Rating</span>
+              </div>
+            </div>
           </div>
 
-          <div className="hero-image">
-            <img src={bg} alt="Clinic" />
+          <div className="hero-visual">
+            <div className="hero-image-frame glass-card">
+              <img src={heroImg || bg} alt="Swastiq eClinic Healthcare" className="hero-img" />
+              <div className="floating-badge badge-top">
+                <span className="icon">🟢</span> 24/7 Doctors Online
+              </div>
+              <div className="floating-badge badge-bottom">
+                <span className="icon">⭐</span> Rated #1 Care Portal
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
+      {/* Live Marquee Ticker */}
       <AnnouncementMarquee />
 
-      <div className="features">
-        <div className="feature">
-          <h3>Doctor Availability</h3>
-          <p>See who’s available and choose a slot instantly.</p>
+      {/* Specialty Browser Section */}
+      <section className="specialties-section">
+        <div className="section-header">
+          <span className="section-subtitle">Specialized Medical Care</span>
+          <h2>Explore Care By Medical Specialty</h2>
+          <p>Find top-rated specialists tailored to your specific health requirements.</p>
         </div>
-        <div className="feature">
-          <h3>Appointment Requests</h3>
-          <p>Send requests that admins approve quickly.</p>
+
+        <div className="specialties-grid">
+          {specialties.map((item, idx) => (
+            <div className="specialty-card glass-card" key={idx}>
+              <div className="specialty-icon">{item.icon}</div>
+              <h3>{item.title}</h3>
+              <p>{item.desc}</p>
+              <Link to="/OurDoctors" className="specialty-link">Browse Specialists →</Link>
+            </div>
+          ))}
         </div>
-        <div className="feature">
-          <h3>Easy Patient Panel</h3>
-          <p>Track your appointments from your dashboard.</p>
+      </section>
+
+      {/* Features Grid */}
+      <section className="features-section">
+        <div className="section-header">
+          <span className="section-subtitle">Why Choose Swastiq eClinic</span>
+          <h2>Comprehensive Patient Care Built For You</h2>
         </div>
-      </div>
+
+        <div className="features-grid">
+          <div className="feature-card glass-card">
+            <div className="feature-icon">⚡</div>
+            <h3>Real-Time Doctor Roster</h3>
+            <p>Check doctor availability, slot timings, and leave status in real-time before booking.</p>
+          </div>
+
+          <div className="feature-card glass-card">
+            <div className="feature-icon">📑</div>
+            <h3>Instant E-Approvals</h3>
+            <p>Submit appointment requests and receive instant status notifications from clinic admins.</p>
+          </div>
+
+          <div className="feature-card glass-card">
+            <div className="feature-icon">🛡️</div>
+            <h3>Secure Patient Portal</h3>
+            <p>Track your past visits, active appointments, and digital prescription history safely.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Bottom CTA Banner */}
+      <section className="cta-banner glass-card">
+        <div className="cta-content">
+          <h2>Ready To Take Charge Of Your Health?</h2>
+          <p>Register an account today and get your first digital medical checkup scheduled in under 2 minutes.</p>
+        </div>
+        <div className="cta-actions">
+          {!user ? (
+            <Link to="/register" className="btn-hero-primary">Create Free Account</Link>
+          ) : (
+            <Link to="/BookAppointment" className="btn-hero-primary">Book Appointment Now</Link>
+          )}
+        </div>
+      </section>
     </div>
   );
 }

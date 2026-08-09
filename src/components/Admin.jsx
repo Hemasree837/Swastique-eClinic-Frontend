@@ -1,12 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import API from "../api";
+import "./Admin.css";
 
 export default function Admin() {
-
   const [tab, setTab] = useState("dashboard");
   const [doctors, setDoctors] = useState([]);
   const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [name, setName] = useState("");
   const [spec, setSpec] = useState("");
@@ -14,85 +15,86 @@ export default function Admin() {
   const [slots, setSlots] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [editId, setEditId] = useState(null);
+  const [statusMessage, setStatusMessage] = useState("");
 
   useEffect(() => {
-    fetchDoctors();
-    fetchAppointments();
+    fetchData();
   }, []);
 
-  const fetchDoctors = async () => {
+  const fetchData = async () => {
+    setLoading(true);
     try {
-      const res = await axios.get(`${API}/doctor`);
-      setDoctors(res.data);
+      const [docRes, appRes] = await Promise.all([
+        axios.get(`${API}/doctor`),
+        axios.get(`${API}/appointment`),
+      ]);
+      setDoctors(docRes.data || []);
+      setAppointments(appRes.data || []);
     } catch (err) {
-      console.error("Error fetching doctors:", err);
-      alert("Failed to fetch doctors");
+      console.error("Error fetching admin data:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const fetchAppointments = async () => {
-    try {
-      const res = await axios.get(`${API}/appointment`);
-      setAppointments(res.data);
-    } catch (err) {
-      console.error("Error fetching appointments:", err);
-      alert("Failed to fetch appointments");
-    }
-  };
+  const handleSaveDoctor = async (e) => {
+    if (e) e.preventDefault();
+    setStatusMessage("");
 
-  const addDoctor = async () => {
     if (!name || !spec || !experience || !slots) {
-      alert("Please fill in name, specialization, experience and slots.");
+      setStatusMessage("Please fill in Doctor Name, Specialization, Experience, and Slots.");
       return;
     }
 
     try {
-      await axios.post(`${API}/doctor`, {
+      const payload = {
         name,
         specialization: spec,
         experience,
         imageUrl,
-        availableSlots: slots.split(","),
+        availableSlots: typeof slots === "string" ? slots.split(",") : slots,
         onLeave: false,
-      });
-      alert("Doctor added successfully!");
-      clearForm();
-      fetchDoctors();
-    } catch (err) {
-      console.error("Error adding doctor:", err);
-      alert("Failed to add doctor: " + (err.response?.data?.message || err.message));
-    }
-  };
+      };
 
-  const updateDoctor = async () => {
-    try {
-      await axios.put(`${API}/doctor/${editId}`, {
-        name,
-        specialization: spec,
-        experience,
-        imageUrl,
-        availableSlots: slots.split(","),
-      });
-      alert("Doctor updated successfully!");
+      if (editId) {
+        await axios.put(`${API}/doctor/${editId}`, payload);
+        setStatusMessage("Doctor profile updated successfully!");
+      } else {
+        await axios.post(`${API}/doctor`, payload);
+        setStatusMessage("New Doctor added successfully!");
+      }
+
       clearForm();
-      setEditId(null);
-      fetchDoctors();
+      fetchData();
     } catch (err) {
-      console.error("Error updating doctor:", err);
-      alert("Failed to update doctor: " + (err.response?.data?.message || err.message));
+      console.error("Error saving doctor:", err);
+      setStatusMessage("Failed to save doctor details.");
     }
   };
 
   const deleteDoctor = async (id) => {
-    if (!window.confirm("Delete doctor?")) return;
+    if (!window.confirm("Are you sure you want to remove this doctor from the clinic roster?")) return;
 
     try {
       await axios.delete(`${API}/doctor/${id}`);
-      alert("Doctor deleted successfully!");
-      fetchDoctors();
+      setStatusMessage("Doctor removed successfully.");
+      fetchData();
     } catch (err) {
       console.error("Error deleting doctor:", err);
-      alert("Failed to delete doctor: " + (err.response?.data?.message || err.message));
+      setStatusMessage("Failed to delete doctor.");
+    }
+  };
+
+  const updateAppointmentStatus = async (appointment, newStatus) => {
+    try {
+      await axios.put(`${API}/appointment/${appointment.id}`, {
+        ...appointment,
+        status: newStatus,
+      });
+      fetchData();
+    } catch (err) {
+      console.error("Error updating appointment status:", err);
+      alert("Failed to update status");
     }
   };
 
@@ -102,212 +104,260 @@ export default function Admin() {
     setExperience("");
     setSlots("");
     setImageUrl("");
+    setEditId(null);
   };
 
+  const pendingAppointments = appointments.filter((a) => a.status === "PENDING");
+  const approvedAppointments = appointments.filter((a) => a.status === "APPROVED" || a.status === "COMPLETED");
+
   return (
-    <div className="container">
-
-      <div className="sidebar">
-        <button onClick={() => setTab("dashboard")}>
-          Dashboard
-        </button>
-
-        <button onClick={() => setTab("doctors")}>
-          Doctors
-        </button>
-
-        <button onClick={() => setTab("appointments")}>
-          Appointments
-        </button>
-      </div>
-
-      <div className="main">
-
-        {tab === "dashboard" && (
+    <div className="admin-page-container">
+      {/* Admin Sidebar */}
+      <aside className="admin-sidebar glass-card">
+        <div className="sidebar-brand">
+          <span className="brand-icon">🏥</span>
           <div>
-            <h2>Dashboard</h2>
-            <div className="dashboard-stats">
-              <div className="stat-card">
-                <h3>Total Doctors</h3>
-                <div className="value">{doctors.length}</div>
+            <h3>Admin Portal</h3>
+            <span className="brand-sub">Swastiq eClinic</span>
+          </div>
+        </div>
+
+        <nav className="sidebar-nav">
+          <button
+            className={`nav-btn ${tab === "dashboard" ? "active" : ""}`}
+            onClick={() => setTab("dashboard")}
+          >
+            📊 Analytics Dashboard
+          </button>
+
+          <button
+            className={`nav-btn ${tab === "doctors" ? "active" : ""}`}
+            onClick={() => setTab("doctors")}
+          >
+            👨‍⚕️ Doctors Roster ({doctors.length})
+          </button>
+
+          <button
+            className={`nav-btn ${tab === "appointments" ? "active" : ""}`}
+            onClick={() => setTab("appointments")}
+          >
+            📅 Appointments ({appointments.length})
+          </button>
+        </nav>
+      </aside>
+
+      {/* Admin Main Area */}
+      <main className="admin-main-content">
+        {statusMessage && (
+          <div className="auth-success-banner" style={{ marginBottom: "20px" }}>
+            <span>✅ {statusMessage}</span>
+          </div>
+        )}
+
+        {/* Tab 1: Dashboard Stats */}
+        {tab === "dashboard" && (
+          <div className="admin-dashboard-tab">
+            <div className="tab-title-header">
+              <h2>Overview & Metrics</h2>
+              <p>Real-time clinic activity counters and system metrics.</p>
+            </div>
+
+            <div className="admin-stats-grid">
+              <div className="admin-stat-card glass-card">
+                <div className="stat-icon-wrapper">👨‍⚕️</div>
+                <div>
+                  <span className="stat-big-val">{doctors.length}</span>
+                  <span className="stat-sub-text">Total Active Doctors</span>
+                </div>
               </div>
-              <div className="stat-card">
-                <h3>Total Appointments</h3>
-                <div className="value">{appointments.length}</div>
+
+              <div className="admin-stat-card glass-card">
+                <div className="stat-icon-wrapper">⏳</div>
+                <div>
+                  <span className="stat-big-val">{pendingAppointments.length}</span>
+                  <span className="stat-sub-text">Pending Approval Requests</span>
+                </div>
+              </div>
+
+              <div className="admin-stat-card glass-card">
+                <div className="stat-icon-wrapper">✅</div>
+                <div>
+                  <span className="stat-big-val">{approvedAppointments.length}</span>
+                  <span className="stat-sub-text">Confirmed Consultations</span>
+                </div>
               </div>
             </div>
           </div>
         )}
 
+        {/* Tab 2: Manage Doctors */}
         {tab === "doctors" && (
-          <div>
-
-            <h2>Manage Doctors</h2>
-
-            <div className="form">
-
-              <input
-                placeholder="Doctor Name"
-                value={name}
-                onChange={(e) =>
-                  setName(e.target.value)
-                }
-              />
-
-              <input
-                placeholder="Specialization"
-                value={spec}
-                onChange={(e) =>
-                  setSpec(e.target.value)
-                }
-              />
-
-              <input
-                type="number"
-                placeholder="Experience"
-                value={experience}
-                onChange={(e) =>
-                  setExperience(e.target.value)
-                }
-              />
-
-              <input
-                placeholder="Slots (9AM,1PM,4PM)"
-                value={slots}
-                onChange={(e) =>
-                  setSlots(e.target.value)
-                }
-              />
-
-              <input
-                placeholder="Image URL (optional)"
-                value={imageUrl}
-                onChange={(e) =>
-                  setImageUrl(e.target.value)
-                }
-              />
-
-              {editId ? (
-                <>
-                  <button onClick={updateDoctor}>
-                    Update Doctor
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setEditId(null);
-                      clearForm();
-                    }}
-                    style={{ background: "rgba(239, 68, 68, 0.1)", color: "#dc2626" }}
-                  >
-                    Cancel
-                  </button>
-                </>
-              ) : (
-                <button onClick={addDoctor}>
-                  Add Doctor
-                </button>
-              )}
+          <div className="admin-doctors-tab">
+            <div className="tab-title-header">
+              <h2>Doctor Roster Management</h2>
+              <p>Add, edit, or remove clinic specialist profiles.</p>
             </div>
 
-            <div className="doctors-list">
-              {doctors.map((d) => (
-                <div className="card" key={d.id}>
-                  <div style={{ textAlign: "center" }}>
-                    <div className="admin-avatar">
-                      {d.imageUrl ? (
-                        <img
-                          src={d.imageUrl}
-                          alt={d.name}
-                          onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.style.display = "none";
-                          }}
-                        />
-                      ) : (
-                        <div className="admin-initials">{d.name?.split(" ").map((x) => x[0]).slice(0, 2).join("")}</div>
-                      )}
-                    </div>
-                    <h3>{d.name}</h3>
-                    <p style={{ color: "var(--accent)", fontWeight: "600", margin: "8px 0 12px 0" }}>{d.specialization}</p>
+            {/* Doctor Form Drawer */}
+            <div className="doctor-form-card glass-card">
+              <h3>{editId ? "✏️ Edit Doctor Details" : "➕ Add New Specialist Doctor"}</h3>
+              <form onSubmit={handleSaveDoctor} className="admin-doc-form">
+                <div className="form-grid-3">
+                  <div className="input-group">
+                    <label className="input-label">Doctor Name</label>
+                    <input
+                      type="text"
+                      placeholder="Dr. Full Name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
                   </div>
 
-                  <p><strong>Experience:</strong> {d.experience} Years</p>
+                  <div className="input-group">
+                    <label className="input-label">Specialization</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Cardiology"
+                      value={spec}
+                      onChange={(e) => setSpec(e.target.value)}
+                    />
+                  </div>
 
-                  <p>
-                    {d.onLeave
-                      ? "🔴 On Leave"
-                      : "🟢 Available"}
-                  </p>
+                  <div className="input-group">
+                    <label className="input-label">Years of Experience</label>
+                    <input
+                      type="number"
+                      placeholder="e.g. 8"
+                      value={experience}
+                      onChange={(e) => setExperience(e.target.value)}
+                    />
+                  </div>
+                </div>
 
-                  <p><strong>Slots:</strong> {d.availableSlots?.join(", ")}</p>
+                <div className="form-grid-2">
+                  <div className="input-group">
+                    <label className="input-label">Available Slots (Comma Separated)</label>
+                    <input
+                      type="text"
+                      placeholder="9:00 AM, 11:30 AM, 3:00 PM"
+                      value={slots}
+                      onChange={(e) => setSlots(e.target.value)}
+                    />
+                  </div>
 
-                  <div className="card-actions">
+                  <div className="input-group">
+                    <label className="input-label">Photo Image URL (Optional)</label>
+                    <input
+                      type="text"
+                      placeholder="https://..."
+                      value={imageUrl}
+                      onChange={(e) => setImageUrl(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="form-actions-row">
+                  <button type="submit" className="btn-hero-primary">
+                    {editId ? "Save Changes" : "Create Doctor Profile"}
+                  </button>
+                  {editId && (
+                    <button type="button" className="btn-hero-secondary" onClick={clearForm}>
+                      Cancel Editing
+                    </button>
+                  )}
+                </div>
+              </form>
+            </div>
+
+            {/* Doctors Grid */}
+            <div className="admin-doctors-grid">
+              {doctors.map((d) => (
+                <div className="admin-doctor-card glass-card" key={d.id}>
+                  <div className="admin-doc-info">
+                    <h4>{d.name}</h4>
+                    <span className="doc-spec">{d.specialization}</span>
+                    <p className="doc-exp">🏅 {d.experience} Years Experience</p>
+                    <span className={`status-pill ${d.onLeave ? "status-leave" : "status-active"}`}>
+                      {d.onLeave ? "🔴 On Leave" : "🟢 Available"}
+                    </span>
+                  </div>
+
+                  <div className="admin-doc-actions">
                     <button
+                      className="btn-action-edit"
                       onClick={() => {
                         setName(d.name);
                         setSpec(d.specialization);
                         setExperience(d.experience);
-                        setSlots(
-                          d.availableSlots?.join(",")
-                        );
-                        setImageUrl(d.imageUrl);
+                        setSlots(Array.isArray(d.availableSlots) ? d.availableSlots.join(",") : d.availableSlots);
+                        setImageUrl(d.imageUrl || "");
                         setEditId(d.id);
                       }}
                     >
-                      Edit
+                      ✏️ Edit
                     </button>
-
-                    <button
-                      onClick={() =>
-                        deleteDoctor(d.id)
-                      }
-                    >
-                      Delete
+                    <button className="btn-action-delete" onClick={() => deleteDoctor(d.id)}>
+                      🗑️ Delete
                     </button>
                   </div>
-
                 </div>
               ))}
             </div>
-
           </div>
         )}
 
+        {/* Tab 3: Manage Appointments */}
         {tab === "appointments" && (
-          <div>
-            <h2>Appointments</h2>
+          <div className="admin-appointments-tab">
+            <div className="tab-title-header">
+              <h2>Appointment Request Approvals</h2>
+              <p>Review patient booking requests and change status.</p>
+            </div>
 
-            {appointments.length === 0 ? (
-              <div className="empty-state">
-                <p>No appointments found</p>
-              </div>
-            ) : (
-              <div className="appointments-table">
-                <div className="appointments-header">
-                  <div>Patient Name</div>
-                  <div>Doctor Name</div>
-                  <div>Date</div>
-                  <div>Time</div>
-                  <div>Status</div>
-                </div>
-                {appointments.map((a) => (
-                  <div className="appointment-item" key={a.id}>
-                    <p><strong>{a.patientName}</strong></p>
-                    <p>{a.doctorName}</p>
-                    <p>{a.date}</p>
-                    <p>{a.time}</p>
-                    <div className="status-badge">{a.status}</div>
-                  </div>
-                ))}
-              </div>
-            )}
-
+            <div className="admin-table-container glass-card">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Patient</th>
+                    <th>Assigned Doctor</th>
+                    <th>Date & Time</th>
+                    <th>Status</th>
+                    <th>Quick Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {appointments.map((a) => (
+                    <tr key={a.id}>
+                      <td>
+                        <strong>{a.patientName}</strong>
+                      </td>
+                      <td>{a.doctorName}</td>
+                      <td>
+                        {a.date} at {a.time}
+                      </td>
+                      <td>
+                        <span className={`status-pill ${a.status === "PENDING" ? "status-pending" : "status-approved"}`}>
+                          {a.status}
+                        </span>
+                      </td>
+                      <td>
+                        {a.status === "PENDING" && (
+                          <button
+                            className="btn-status-approve"
+                            onClick={() => updateAppointmentStatus(a, "APPROVED")}
+                          >
+                            ✅ Approve
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
-
-      </div>
-
+      </main>
     </div>
   );
 }

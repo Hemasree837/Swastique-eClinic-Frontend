@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import logo from "../assets/logo.jpeg";
 import API from "../api";
 import "./Register.css";
 
@@ -12,19 +13,27 @@ export default function Register() {
   const [role, setRole] = useState("PATIENT");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
 
   const navigate = useNavigate();
 
-  const handleRegister = async () => {
+  const handleRegister = async (e) => {
+    if (e) e.preventDefault();
     setError("");
+    setSuccessMsg("");
 
     if (!username.trim() || !email.trim() || !password || !confirmPassword) {
-      setError("Please fill all fields");
+      setError("Please fill out all form fields.");
+      return;
+    }
+
+    if (password.length < 4) {
+      setError("Password must be at least 4 characters long.");
       return;
     }
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError("Passwords do not match.");
       return;
     }
 
@@ -38,8 +47,10 @@ export default function Register() {
         role,
       });
 
-      alert("Registered Successfully! Please log in.");
-      navigate("/login");
+      setSuccessMsg("Account created successfully! Redirecting to login...");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
     } catch (err) {
       console.error("Registration error:", err);
       const serverMsg =
@@ -49,9 +60,9 @@ export default function Register() {
       if (serverMsg) {
         setError(serverMsg);
       } else if (err.code === "ERR_NETWORK") {
-        setError("Network error: Backend is starting up on Render (takes ~45s). Please wait a moment and try again.");
+        setError("Connecting to live backend... If server is starting up, please wait ~30s and try again.");
       } else {
-        setError("Registration Failed. Please try again.");
+        setError("Registration Failed. Username or email might already be registered.");
       }
     } finally {
       setLoading(false);
@@ -59,56 +70,105 @@ export default function Register() {
   };
 
   return (
-    <div className="register-container">
-      <div className="register-card">
-        <h2>Create Account</h2>
+    <div className="auth-page">
+      <div className="auth-card glass-card">
+        <div className="auth-header">
+          <div className="auth-logo-frame">
+            <img src={logo} alt="Swastiq eClinic" className="auth-logo" />
+          </div>
+          <h2>Create Account</h2>
+          <p className="auth-subtitle">Join Swastiq eClinic for 24/7 healthcare access</p>
+        </div>
 
-        {error && <div style={{ color: "#dc2626", background: "#fee2e2", padding: "10px", borderRadius: "6px", marginBottom: "12px", fontSize: "14px", textAlign: "center" }}>{error}</div>}
+        {error && (
+          <div className="auth-error-banner">
+            <span className="error-icon">⚠️</span>
+            <span>{error}</span>
+          </div>
+        )}
 
-        <select value={role} onChange={(e) => setRole(e.target.value)} disabled={loading}>
-          <option value="PATIENT">Patient</option>
-          <option value="REPORTER">Reporter</option>
-        </select>
+        {successMsg && (
+          <div className="auth-success-banner">
+            <span className="success-icon">✅</span>
+            <span>{successMsg}</span>
+          </div>
+        )}
 
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          disabled={loading}
-        />
+        <form onSubmit={handleRegister} className="auth-form">
+          <div className="input-group">
+            <label className="input-label">Account Role</label>
+            <div className="role-selector">
+              <button
+                type="button"
+                className={`role-tab ${role === "PATIENT" ? "active" : ""}`}
+                onClick={() => setRole("PATIENT")}
+              >
+                👤 Patient
+              </button>
+              <button
+                type="button"
+                className={`role-tab ${role === "REPORTER" ? "active" : ""}`}
+                onClick={() => setRole("REPORTER")}
+              >
+                📋 Reporter / Desk
+              </button>
+            </div>
+          </div>
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          disabled={loading}
-        />
+          <div className="input-group">
+            <label className="input-label">Username</label>
+            <input
+              type="text"
+              placeholder="Choose a username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              disabled={loading}
+            />
+          </div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          disabled={loading}
-        />
+          <div className="input-group">
+            <label className="input-label">Email Address</label>
+            <input
+              type="email"
+              placeholder="name@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
+            />
+          </div>
 
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          disabled={loading}
-        />
+          <div className="input-group">
+            <label className="input-label">Password</label>
+            <input
+              type="password"
+              placeholder="Create password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={loading}
+            />
+          </div>
 
-        <button onClick={handleRegister} disabled={loading} style={{ opacity: loading ? 0.7 : 1 }}>
-          {loading ? "Registering (connecting to backend)..." : "Register"}
-        </button>
+          <div className="input-group">
+            <label className="input-label">Confirm Password</label>
+            <input
+              type="password"
+              placeholder="Re-enter password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              disabled={loading}
+            />
+          </div>
 
-        <p>
-          Already have account? <Link to="/login">Login</Link>
-        </p>
+          <button type="submit" className="btn-auth-submit" disabled={loading}>
+            {loading ? "Creating Account..." : "Register Account"}
+          </button>
+        </form>
+
+        <div className="auth-footer">
+          <p>
+            Already have an account? <Link to="/login" className="auth-link">Log In</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

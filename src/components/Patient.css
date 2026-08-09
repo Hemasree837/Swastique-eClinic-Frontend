@@ -1,45 +1,191 @@
-body {
-  font-family: Arial;
-  background: #f5f5f5;
-  margin: 0;
+.patient-dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
 }
 
-.container {
-  text-align: center;
-  padding: 20px;
+.patient-welcome-banner {
+  padding: 28px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
-.tabs button {
-  margin: 5px;
-  padding: 10px;
-  border: none;
-  background: #6c5bf1;
-  color: white;
+.welcome-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-  padding: 20px;
-}
-
-.card {
-  background: white;
-  padding: 15px;
-  border: 1px solid #ddd;
-}
-
-.card img {
-  width: 80px;
-  height: 80px;
+.patient-avatar-badge {
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--purple));
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
 }
 
-.card button {
-  margin: 5px;
-  padding: 8px;
-  background: #6c5bf1;
-  color: white;
-  border: none;
+.welcome-info h2 {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.welcome-info p {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.patient-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.patient-stat-card {
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-align: left;
+}
+
+.stat-icon {
+  font-size: 28px;
+  width: 48px;
+  height: 48px;
+  background: var(--primary-light);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-num {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-heading);
+  display: block;
+}
+
+.stat-title {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.appointments-section {
+  padding: 28px;
+  text-align: left;
+}
+
+.section-title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.section-title-bar h3 {
+  font-size: 20px;
+}
+
+.filter-tabs-row {
+  display: flex;
+  gap: 8px;
+}
+
+.filter-btn {
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  color: var(--text-main);
+}
+
+.filter-btn.active {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+
+.appointments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.appointment-card {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.app-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.doc-icon-chip {
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  background: var(--primary-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-card-header h4 {
+  font-size: 16px;
+  margin-bottom: 2px;
+}
+
+.app-date-text {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.app-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.status-pending {
+  background: rgba(245, 158, 11, 0.15);
+  color: #d97706;
+}
+
+.status-approved {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+.app-id {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.empty-appointments-state {
+  padding: 48px;
+  text-align: center;
 }

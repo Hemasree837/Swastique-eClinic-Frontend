@@ -1,85 +1,198 @@
-.footer {
-  background: linear-gradient(180deg, #f8f9ff 0%, #eef2ff 100%);
-  color: #1f2937;
-  padding: 40px 24px 18px;
+.footer-modern {
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  margin-top: 60px;
+  color: var(--text-main);
 }
 
-.footer-inner {
-  max-width: 1100px;
+.helpline-banner {
+  background: linear-gradient(135deg, #0284c7, #6366f1);
+  color: #ffffff;
+  padding: 16px 24px;
+}
+
+.helpline-inner {
+  max-width: 1280px;
   margin: 0 auto;
   display: flex;
-  gap: 40px;
+  align-items: center;
   justify-content: space-between;
-  align-items: flex-start;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
-.footer-brand {
-  min-width: 240px;
-  max-width: 420px;
-}
-
-.footer-brand h2 {
-  margin: 0 0 10px;
-  font-size: 24px;
-  letter-spacing: -0.4px;
-}
-
-.footer-brand p {
-  margin: 0;
-  color: #4b5563;
-  line-height: 1.7;
-}
-
-.footer-links {
+.helpline-info {
   display: flex;
-  gap: 40px;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
 }
 
-.link-group {
+.pulse-icon {
+  font-size: 24px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+.helpline-label {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.helpline-sub {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.helpline-phone-btn {
+  background: #ffffff;
+  color: #0284c7 !important;
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: var(--transition);
+}
+
+.helpline-phone-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+
+.footer-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 48px 24px 24px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.footer-brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.footer-logo-img {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+}
+
+.footer-brand-name {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-heading);
+}
+
+.footer-brand-name span {
+  color: var(--primary);
+}
+
+.footer-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.social-pills {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
-.link-group h3 {
-  margin: 0;
-  font-size: 15px;
-  color: #111827;
-}
-
-.link-group a {
-  color: #4b5563;
-  text-decoration: none;
-  font-size: 14px;
-  transition: color .2s ease;
-}
-
-.link-group a:hover {
-  color: #0f172a;
-}
-
-.footer-note {
-  max-width: 1100px;
-  margin: 28px auto 0;
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  color: #6b7280;
+.social-pill {
   font-size: 13px;
-  border-top: 1px solid rgba(15,23,42,0.08);
-  padding-top: 18px;
+  color: var(--text-main);
 }
 
-@media (max-width: 720px) {
-  .footer-inner {
-    flex-direction: column;
-    gap: 24px;
-  }
+.footer-col h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 18px;
+  color: var(--text-heading);
+}
 
-  .footer-note {
+.footer-col a {
+  display: block;
+  font-size: 14px;
+  color: var(--text-main);
+  margin-bottom: 10px;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.footer-col a:hover {
+  color: var(--primary);
+  transform: translateX(3px);
+}
+
+.hours-text {
+  font-size: 13px;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+
+.location-badge {
+  margin-top: 14px;
+  font-size: 12px;
+  background: var(--primary-light);
+  color: var(--primary);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.footer-meta-links {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+  .helpline-inner {
     flex-direction: column;
-    align-items: flex-start;
+    text-align: center;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
   }
 }

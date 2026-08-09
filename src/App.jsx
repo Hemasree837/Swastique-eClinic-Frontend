@@ -1,5 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -25,56 +25,85 @@ export default function App() {
     }
   });
 
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("theme") || "light";
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  };
+
   return (
     <Router>
       <div className="app">
+        <Header user={user} setUser={setUser} theme={theme} toggleTheme={toggleTheme} />
 
-        <Header user={user} setUser={setUser} />
-
-        <div className="content">
+        <main className="content">
           <Routes>
-
-            <Route path="/" element={<Home />} />
-
-            <Route
-              path="/login"
-              element={<Login setUser={setUser} />}
-            />
-
+            <Route path="/" element={<Home user={user} />} />
+            <Route path="/login" element={<Login setUser={setUser} />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/OurDoctors" element={<OurDoctors user={user} />} />
 
             <Route
               path="/admin"
               element={
-                user?.role === "ADMIN"
-                  ? <Admin />
-                  : <h2>Access Denied</h2>
+                user?.role === "ADMIN" ? (
+                  <Admin />
+                ) : (
+                  <div className="access-denied-card glass-card">
+                    <div className="icon-badge">🔒</div>
+                    <h2>Admin Access Required</h2>
+                    <p>You must be logged in as an Administrator to access the admin portal.</p>
+                    <Link to="/login" className="btn-primary">Log In as Admin</Link>
+                  </div>
+                )
               }
             />
 
             <Route
               path="/patient"
               element={
-                user?.role === "PATIENT"
-                  ? <Patient user={user} />
-                  : <h2>Please Login as Patient</h2>
+                user?.role === "PATIENT" ? (
+                  <Patient user={user} />
+                ) : (
+                  <div className="access-denied-card glass-card">
+                    <div className="icon-badge">👤</div>
+                    <h2>Patient Login Required</h2>
+                    <p>Please log in to your patient account to view your medical dashboard.</p>
+                    <Link to="/login" className="btn-primary">Log In</Link>
+                  </div>
+                )
               }
             />
 
             <Route path="/reporter" element={<Reporter />} />
-            <Route path="/OurDoctors" element={<OurDoctors />} />
 
             <Route
               path="/BookAppointment"
               element={
-                user?.role === "PATIENT"
-                  ? <BookAppointment />
-                  : <h2>Please login as patient</h2>
+                user ? (
+                  <BookAppointment user={user} />
+                ) : (
+                  <div className="access-denied-card glass-card">
+                    <div className="icon-badge">📅</div>
+                    <h2>Login Required to Book</h2>
+                    <p>Please log in or create an account to schedule an appointment with our specialist doctors.</p>
+                    <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: '16px' }}>
+                      <Link to="/login" className="btn-primary">Log In</Link>
+                      <Link to="/register" className="btn-secondary">Register Account</Link>
+                    </div>
+                  </div>
+                )
               }
             />
-
           </Routes>
-        </div>
+        </main>
 
         <Footer />
       </div>
