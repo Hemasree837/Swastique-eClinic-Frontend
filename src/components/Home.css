@@ -1,41 +1,74 @@
 .home-container {
   display: flex;
   flex-direction: column;
-  gap: 56px;
+  gap: 40px;
 }
 
-/* Hero Section */
-.hero-section {
-  padding: 32px 0;
+/* Full-Bleed Hero Section with Gradient Fade Blend Effect */
+.hero-section-blend {
+  position: relative;
+  width: 100%;
+  min-height: 540px;
+  background-size: cover;
+  background-position: center right;
+  background-repeat: no-repeat;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
 }
 
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 48px;
+.hero-blend-overlay {
+  width: 100%;
+  height: 100%;
+  min-height: 540px;
+  background: linear-gradient(
+    90deg,
+    rgba(248, 250, 252, 0.97) 0%,
+    rgba(248, 250, 252, 0.94) 38%,
+    rgba(248, 250, 252, 0.75) 58%,
+    rgba(248, 250, 252, 0.2) 80%,
+    rgba(248, 250, 252, 0) 100%
+  );
+  padding: 54px 44px;
+  display: flex;
   align-items: center;
+  box-sizing: border-box;
 }
 
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--primary-light);
-  color: var(--primary);
-  font-family: var(--font-heading);
-  font-size: 13px;
-  font-weight: 700;
-  padding: 6px 14px;
-  border-radius: var(--radius-full);
-  margin-bottom: 20px;
+[data-theme='dark'] .hero-blend-overlay {
+  background: linear-gradient(
+    90deg,
+    rgba(11, 15, 23, 0.97) 0%,
+    rgba(11, 15, 23, 0.94) 38%,
+    rgba(11, 15, 23, 0.75) 58%,
+    rgba(11, 15, 23, 0.2) 80%,
+    rgba(11, 15, 23, 0) 100%
+  );
 }
 
-.hero-title {
-  font-size: 48px;
+.hero-content-left {
+  max-width: 520px;
+  text-align: left;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.badge-dot-green {
+  display: inline-block;
+  font-size: 10px;
+  margin-right: 4px;
+}
+
+.hero-title-blend {
+  font-size: 46px;
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: -1px;
-  margin-bottom: 20px;
+  margin: 16px 0;
+  color: var(--text-heading);
 }
 
 .gradient-text {
@@ -44,18 +77,17 @@
   -webkit-text-fill-color: transparent;
 }
 
-.hero-lead {
-  font-size: 17px;
+.hero-lead-blend {
+  font-size: 16px;
   color: var(--text-muted);
   line-height: 1.6;
-  margin-bottom: 32px;
-  max-width: 580px;
+  margin-bottom: 28px;
 }
 
-.hero-actions {
+.hero-actions-blend {
   display: flex;
   gap: 16px;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
   flex-wrap: wrap;
 }
 
@@ -63,9 +95,9 @@
   background: linear-gradient(135deg, var(--primary), var(--purple));
   color: #ffffff !important;
   font-family: var(--font-heading);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
-  padding: 14px 28px;
+  padding: 13px 26px;
   border-radius: var(--radius-full);
   box-shadow: var(--shadow-md);
   transition: var(--transition);
@@ -81,9 +113,9 @@
   color: var(--text-heading) !important;
   border: 1px solid var(--border);
   font-family: var(--font-heading);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  padding: 14px 28px;
+  padding: 13px 26px;
   border-radius: var(--radius-full);
   box-shadow: var(--shadow-sm);
   transition: var(--transition);
@@ -94,15 +126,12 @@
   color: var(--primary) !important;
 }
 
-.hero-stats {
+.hero-stats-blend {
   display: flex;
   align-items: center;
-  gap: 24px;
-  padding: 18px 24px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
+  gap: 20px;
+  padding: 16px 24px;
+  width: 100%;
 }
 
 .stat-card {
@@ -126,117 +155,6 @@
   width: 1px;
   height: 36px;
   background-color: var(--border);
-}
-
-/* Hero Visual */
-.hero-visual {
-  position: relative;
-}
-
-.hero-image-frame {
-  position: relative;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  padding: 8px;
-}
-
-.hero-img {
-  width: 100%;
-  height: 480px;
-  object-fit: cover;
-  border-radius: var(--radius-md);
-}
-
-.floating-badge {
-  position: absolute;
-  background: var(--bg-glass);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--border);
-  padding: 10px 16px;
-  border-radius: var(--radius-full);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text-heading);
-  box-shadow: var(--shadow-md);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.badge-top {
-  top: 24px;
-  left: 24px;
-}
-
-.badge-bottom {
-  bottom: 24px;
-  right: 24px;
-}
-
-/* Hospital Showcase Section */
-.hospital-showcase-section {
-  padding: 36px;
-  margin: 16px 0;
-  text-align: left;
-}
-
-.showcase-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 36px;
-  align-items: center;
-}
-
-.showcase-img-frame {
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  box-shadow: var(--shadow-md);
-  height: 320px;
-}
-
-.showcase-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.showcase-tag {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--primary);
-  background: var(--primary-light);
-  padding: 4px 12px;
-  border-radius: var(--radius-full);
-  display: inline-block;
-  margin-bottom: 12px;
-}
-
-.showcase-content h2 {
-  font-size: 30px;
-  margin-bottom: 12px;
-}
-
-.showcase-content p {
-  color: var(--text-muted);
-  font-size: 15px;
-  line-height: 1.6;
-  margin-bottom: 20px;
-}
-
-.showcase-badges-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.sc-badge {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-heading);
-  background: var(--bg-page);
-  padding: 8px 12px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
 }
 
 /* Section Header */
@@ -372,10 +290,22 @@
 }
 
 @media (max-width: 900px) {
-  .hero-grid, .showcase-grid {
-    grid-template-columns: 1fr;
+  .hero-title-blend {
+    font-size: 34px;
   }
-  .hero-title {
-    font-size: 36px;
+  .hero-blend-overlay {
+    padding: 36px 24px;
+    background: linear-gradient(
+      180deg,
+      rgba(248, 250, 252, 0.96) 0%,
+      rgba(248, 250, 252, 0.88) 100%
+    );
+  }
+  [data-theme='dark'] .hero-blend-overlay {
+    background: linear-gradient(
+      180deg,
+      rgba(11, 15, 23, 0.96) 0%,
+      rgba(11, 15, 23, 0.88) 100%
+    );
   }
 }

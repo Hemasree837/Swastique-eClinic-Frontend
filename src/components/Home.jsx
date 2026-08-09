@@ -17,23 +17,26 @@ const specialties = [
 export default function Home({ user }) {
   return (
     <div className="home-container">
-      {/* Hero Section */}
-      <section className="hero-section">
-        <div className="hero-grid">
-          <div className="hero-content">
+      {/* Hero Section with Full-Bleed Hospital Blend Effect */}
+      <section
+        className="hero-section-blend"
+        style={{ backgroundImage: `url(${swastiqueHospital})` }}
+      >
+        <div className="hero-blend-overlay">
+          <div className="hero-content-left">
             <span className="hero-badge">
-              <span className="badge-sparkle">✨</span> Swastique Hospital OPD & Care Portal
+              <span className="badge-dot-green">🟢</span> 24/7 Outpatient Care
             </span>
 
-            <h1 className="hero-title">
-              Your Trusted First Stop To <span className="gradient-text">Better Health</span>
+            <h1 className="hero-title-blend">
+              Your Trusted First Stop<br />To <span className="gradient-text">Better Health</span>
             </h1>
 
-            <p className="hero-lead">
+            <p className="hero-lead-blend">
               Access 24/7 outpatient care (OPD), book instant appointment slots with board-certified doctors, and manage your digital medical records from one simple portal.
             </p>
 
-            <div className="hero-actions">
+            <div className="hero-actions-blend">
               <Link to="/BookAppointment" className="btn-hero-primary">
                 📅 Book Appointment
               </Link>
@@ -42,8 +45,8 @@ export default function Home({ user }) {
               </Link>
             </div>
 
-            {/* Stat Counters */}
-            <div className="hero-stats">
+            {/* Stat Counters Overlay Card */}
+            <div className="hero-stats-blend glass-card">
               <div className="stat-card">
                 <span className="stat-value">10,000+</span>
                 <span className="stat-label">Happy Patients</span>
@@ -60,45 +63,11 @@ export default function Home({ user }) {
               </div>
             </div>
           </div>
-
-          <div className="hero-visual">
-            <div className="hero-image-frame glass-card">
-              <img src={swastiqueHospital} alt="Swastique Hospital Facility" className="hero-img" />
-              <div className="floating-badge badge-top">
-                <span className="icon">🟢</span> 24/7 Hospital Care
-              </div>
-              <div className="floating-badge badge-bottom">
-                <span className="icon">🏥</span> Swastique Hospital OPD
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
       {/* Live Marquee Ticker */}
       <AnnouncementMarquee />
-
-      {/* Hospital Facility Showcase Banner */}
-      <section className="hospital-showcase-section glass-card">
-        <div className="showcase-grid">
-          <div className="showcase-img-frame">
-            <img src={swastiqueHospital} alt="Swastique Hospital State-of-the-Art Facility" className="showcase-img" />
-          </div>
-          <div className="showcase-content">
-            <span className="showcase-tag">🏥 World-Class Infrastructure</span>
-            <h2>Welcome To Swastique Hospital</h2>
-            <p>
-              Experience compassionate, state-of-the-art care at our modern outpatient department (OPD), pharmacy, laboratory, radiology, and 24/7 emergency response center.
-            </p>
-            <div className="showcase-badges-grid">
-              <span className="sc-badge">✔️ Outpatient OPD</span>
-              <span className="sc-badge">✔️ Digital Pharmacy</span>
-              <span className="sc-badge">✔️ 24/7 Emergency</span>
-              <span className="sc-badge">✔️ Modern Lab & X-Ray</span>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Interactive AI Symptom Checker */}
       <SymptomChecker />
