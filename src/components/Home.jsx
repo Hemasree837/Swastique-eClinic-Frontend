@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import bg from "../assets/bg.jpg";
 import heroImg from "../assets/hero.png";
 import AnnouncementMarquee from "./AnnouncementMarquee";
+import SymptomChecker from "./SymptomChecker";
 import "./Home.css";
 
 const specialties = [
@@ -76,6 +77,9 @@ export default function Home({ user }) {
 
       {/* Live Marquee Ticker */}
       <AnnouncementMarquee />
+
+      {/* Interactive AI Symptom Checker */}
+      <SymptomChecker />
 
       {/* Specialty Browser Section */}
       <section className="specialties-section">

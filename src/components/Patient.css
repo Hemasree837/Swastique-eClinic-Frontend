@@ -1,7 +1,7 @@
 .patient-dashboard-container {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 24px;
 }
 
 .patient-welcome-banner {
@@ -44,148 +44,105 @@
   font-size: 14px;
 }
 
-.patient-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-}
-
-.patient-stat-card {
-  padding: 24px;
+.patient-tabs-row {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  text-align: left;
+  gap: 12px;
+  padding: 12px;
+  flex-wrap: wrap;
 }
 
-.stat-icon {
-  font-size: 28px;
-  width: 48px;
-  height: 48px;
-  background: var(--primary-light);
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.stat-num {
-  font-family: var(--font-heading);
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--text-heading);
-  display: block;
-}
-
-.stat-title {
-  font-size: 13px;
+.tab-item-btn {
+  background: transparent;
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 600;
   color: var(--text-muted);
+  transition: var(--transition);
 }
 
-.appointments-section {
+.tab-item-btn:hover {
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
+.tab-item-btn.active {
+  background: var(--primary);
+  color: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+.appointments-section, .prescriptions-section, .profile-section {
   padding: 28px;
   text-align: left;
 }
 
-.section-title-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.tab-subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
   margin-bottom: 24px;
-  flex-wrap: wrap;
-  gap: 16px;
 }
 
-.section-title-bar h3 {
-  font-size: 20px;
-}
-
-.filter-tabs-row {
-  display: flex;
-  gap: 8px;
-}
-
-.filter-btn {
-  background: var(--bg-page);
-  border: 1px solid var(--border);
-  font-size: 13px;
+.btn-cancel-app {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  font-size: 12px;
   font-weight: 600;
-  padding: 6px 14px;
-  border-radius: var(--radius-full);
-  color: var(--text-main);
+  padding: 4px 10px;
+  border-radius: 4px;
 }
 
-.filter-btn.active {
-  background: var(--primary);
+.btn-cancel-app:hover {
+  background: #ef4444;
   color: #ffffff;
-  border-color: var(--primary);
 }
 
-.appointments-grid {
+.prescriptions-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
 }
 
-.appointment-card {
+.prescription-card {
   padding: 20px;
+}
+
+.rx-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.rx-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-light);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.rx-date {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.rx-diagnosis {
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.rx-meds-count {
+  font-size: 12px;
+  color: var(--primary);
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.profile-form {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-}
-
-.app-card-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.doc-icon-chip {
-  font-size: 24px;
-  width: 40px;
-  height: 40px;
-  background: var(--primary-light);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.app-card-header h4 {
-  font-size: 16px;
-  margin-bottom: 2px;
-}
-
-.app-date-text {
-  font-size: 13px;
-  color: var(--text-muted);
-}
-
-.app-card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-}
-
-.status-pending {
-  background: rgba(245, 158, 11, 0.15);
-  color: #d97706;
-}
-
-.status-approved {
-  background: var(--accent-light);
-  color: var(--accent);
-}
-
-.app-id {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.empty-appointments-state {
-  padding: 48px;
-  text-align: center;
+  gap: 16px;
+  max-width: 600px;
 }

@@ -1,0 +1,226 @@
+.rx-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 2200;
+  overflow-y: auto;
+}
+
+.rx-modal-card {
+  width: 100%;
+  max-width: 680px;
+  padding: 32px;
+  text-align: left;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+}
+
+.rx-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.rx-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rx-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+}
+
+.rx-brand h2 {
+  font-size: 20px;
+  margin-bottom: 2px;
+}
+
+.rx-brand p {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.rx-symbol {
+  font-family: var(--font-heading);
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.rx-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  background: var(--bg-page);
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.rx-meta-label {
+  color: var(--text-muted);
+  margin-right: 6px;
+}
+
+.rx-meta-value {
+  color: var(--text-heading);
+}
+
+.rx-section {
+  margin-bottom: 20px;
+}
+
+.rx-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.rx-section-title {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-heading);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.rx-input, .rx-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 14px;
+}
+
+.rx-read-text {
+  font-size: 14px;
+  color: var(--text-main);
+  background: var(--bg-page);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.rx-medicines-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+.rx-medicines-table th, .rx-medicines-table td {
+  padding: 10px;
+  border: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.rx-medicines-table th {
+  background: var(--bg-page);
+  font-weight: 700;
+}
+
+.rx-medicines-table input {
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
+.badge-freq {
+  background: var(--primary-light);
+  color: var(--primary);
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.btn-add-med {
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+}
+
+.btn-del-med {
+  background: transparent;
+  font-size: 14px;
+  padding: 4px;
+}
+
+.rx-footer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+  margin-top: 24px;
+}
+
+.clinic-stamp-badge {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-light);
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+}
+
+.doc-sign-block {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.sign-line {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 15px;
+  border-bottom: 1px solid var(--text-heading);
+  padding-bottom: 2px;
+}
+
+.sign-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.rx-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .rx-modal-overlay {
+    position: static;
+    background: none;
+    padding: 0;
+  }
+  .rx-modal-card {
+    box-shadow: none;
+    border: none;
+  }
+}

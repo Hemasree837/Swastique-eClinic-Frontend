@@ -48,6 +48,10 @@ export default function OurDoctors({ user }) {
   const [selectedSpec, setSelectedSpec] = useState("All Specializations");
   const [availabilityFilter, setAvailabilityFilter] = useState("all");
 
+  const [activeReviewDoctor, setActiveReviewDoctor] = useState(null);
+  const [reviewStars, setReviewStars] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+
   useEffect(() => {
     getDoctors();
   }, []);
@@ -62,6 +66,26 @@ export default function OurDoctors({ user }) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSaveReview = (e) => {
+    e.preventDefault();
+    if (!activeReviewDoctor) return;
+
+    const reviewObj = {
+      user: user?.username || "Anonymous Patient",
+      rating: reviewStars,
+      comment: reviewComment || "Great consultation and thorough checkup!",
+      date: new Date().toLocaleDateString(),
+    };
+
+    const storageKey = `doctor_reviews_${activeReviewDoctor.id}`;
+    const existing = JSON.parse(localStorage.getItem(storageKey) || "[]");
+    existing.unshift(reviewObj);
+    localStorage.setItem(storageKey, JSON.stringify(existing));
+
+    setReviewComment("");
+    setActiveReviewDoctor(null);
   };
 
   const filteredDoctors = doctors.filter((d) => {
@@ -87,7 +111,7 @@ export default function OurDoctors({ user }) {
       <div className="doctors-page-header glass-card">
         <div>
           <h2>Meet Our Specialist Doctors</h2>
-          <p>Explore board-certified medical experts and book instant appointments.</p>
+          <p>Explore board-certified medical experts, view patient ratings, and book instant appointments.</p>
         </div>
 
         <div className="search-bar-wrapper">
@@ -159,6 +183,8 @@ export default function OurDoctors({ user }) {
             ? d.availableSlots.split(",")
             : [];
 
+          const reviews = JSON.parse(localStorage.getItem(`doctor_reviews_${d.id}`) || "[]");
+
           return (
             <article className="doctor-card-modern glass-card" key={d.id}>
               <div className="doctor-card-top">
@@ -180,7 +206,7 @@ export default function OurDoctors({ user }) {
                 
                 <div className="doctor-meta-row">
                   <span className="meta-badge">🏅 {d.experience || "0"} Yrs Experience</span>
-                  <span className="meta-badge">⭐ 4.9 Rating</span>
+                  <span className="meta-badge">⭐ 4.9 ({reviews.length + 12} Reviews)</span>
                 </div>
 
                 <div className="slots-section">
@@ -205,11 +231,60 @@ export default function OurDoctors({ user }) {
                 >
                   📅 Schedule Visit
                 </Link>
+                <button
+                  className="btn-hero-secondary"
+                  style={{ width: "100%", marginTop: "8px", fontSize: "12px", padding: "6px" }}
+                  onClick={() => setActiveReviewDoctor(d)}
+                >
+                  ⭐ Write Patient Review
+                </button>
               </div>
             </article>
           );
         })}
       </div>
+
+      {/* Review Modal */}
+      {activeReviewDoctor && (
+        <div className="rx-modal-overlay" onClick={() => setActiveReviewDoctor(null)}>
+          <div className="rx-modal-card glass-card" onClick={(e) => e.stopPropagation()}>
+            <h3>Rate & Review {activeReviewDoctor.name}</h3>
+            <p className="tab-subtitle">Share your feedback about your consultation experience.</p>
+
+            <form onSubmit={handleSaveReview} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div className="input-group">
+                <label className="input-label">Star Rating</label>
+                <select value={reviewStars} onChange={(e) => setReviewStars(Number(e.target.value))}>
+                  <option value="5">⭐⭐⭐⭐⭐ 5 Stars (Excellent)</option>
+                  <option value="4">⭐⭐⭐⭐ 4 Stars (Very Good)</option>
+                  <option value="3">⭐⭐⭐ 3 Stars (Good)</option>
+                  <option value="2">⭐⭐ 2 Stars (Fair)</option>
+                  <option value="1">⭐ 1 Star (Poor)</option>
+                </select>
+              </div>
+
+              <div className="input-group">
+                <label className="input-label">Your Review & Comments</label>
+                <textarea
+                  rows="3"
+                  placeholder="Describe doctor punctuality, diagnosis accuracy, or clinic staff guidance..."
+                  value={reviewComment}
+                  onChange={(e) => setReviewComment(e.target.value)}
+                ></textarea>
+              </div>
+
+              <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end" }}>
+                <button type="button" className="btn-link" onClick={() => setActiveReviewDoctor(null)}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn-hero-primary">
+                  Submit Review
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

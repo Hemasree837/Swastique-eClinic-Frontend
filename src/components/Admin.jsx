@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import API from "../api";
+import PrescriptionModal from "./PrescriptionModal";
 import "./Admin.css";
 
 export default function Admin() {
@@ -16,6 +17,8 @@ export default function Admin() {
   const [imageUrl, setImageUrl] = useState("");
   const [editId, setEditId] = useState(null);
   const [statusMessage, setStatusMessage] = useState("");
+
+  const [prescriptionTargetAppointment, setPrescriptionTargetAppointment] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -95,6 +98,19 @@ export default function Admin() {
     } catch (err) {
       console.error("Error updating appointment status:", err);
       alert("Failed to update status");
+    }
+  };
+
+  const handleSavePrescription = (prescriptionData) => {
+    try {
+      const patientKey = `prescriptions_${prescriptionData.patientName}`;
+      const existing = JSON.parse(localStorage.getItem(patientKey) || "[]");
+      existing.unshift(prescriptionData);
+      localStorage.setItem(patientKey, JSON.stringify(existing));
+      setStatusMessage(`E-Prescription issued successfully to patient ${prescriptionData.patientName}!`);
+      setPrescriptionTargetAppointment(null);
+    } catch (err) {
+      console.error("Error saving prescription:", err);
     }
   };
 
@@ -311,7 +327,7 @@ export default function Admin() {
           <div className="admin-appointments-tab">
             <div className="tab-title-header">
               <h2>Appointment Request Approvals</h2>
-              <p>Review patient booking requests and change status.</p>
+              <p>Review patient booking requests, approve visits, and issue digital prescriptions.</p>
             </div>
 
             <div className="admin-table-container glass-card">
@@ -341,14 +357,23 @@ export default function Admin() {
                         </span>
                       </td>
                       <td>
-                        {a.status === "PENDING" && (
+                        <div style={{ display: "flex", gap: "6px" }}>
+                          {a.status === "PENDING" && (
+                            <button
+                              className="btn-status-approve"
+                              onClick={() => updateAppointmentStatus(a, "APPROVED")}
+                            >
+                              ✅ Approve
+                            </button>
+                          )}
                           <button
-                            className="btn-status-approve"
-                            onClick={() => updateAppointmentStatus(a, "APPROVED")}
+                            className="btn-hero-secondary"
+                            style={{ padding: "4px 8px", fontSize: "11px" }}
+                            onClick={() => setPrescriptionTargetAppointment(a)}
                           >
-                            ✅ Approve
+                            💊 Issue Rx
                           </button>
-                        )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -358,6 +383,15 @@ export default function Admin() {
           </div>
         )}
       </main>
+
+      {/* Prescription Generator Modal */}
+      {prescriptionTargetAppointment && (
+        <PrescriptionModal
+          appointment={prescriptionTargetAppointment}
+          onClose={() => setPrescriptionTargetAppointment(null)}
+          onSave={handleSavePrescription}
+        />
+      )}
     </div>
   );
 }
