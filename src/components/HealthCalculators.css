@@ -1,0 +1,129 @@
+.health-calc-card {
+  padding: 36px 32px;
+  margin: 32px 0;
+  text-align: left;
+}
+
+.calc-header {
+  margin-bottom: 24px;
+}
+
+.calc-badge {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  background: var(--primary-light);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.calc-header h2 {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.calc-header p {
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.calc-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+
+.calc-tab-btn {
+  background: transparent;
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.calc-tab-btn:hover {
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
+.calc-tab-btn.active {
+  background: var(--primary);
+  color: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+.calc-body-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: center;
+}
+
+.calc-inputs-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.slider-label-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.slider-group input[type="range"] {
+  width: 100%;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.calc-result-box {
+  padding: 32px;
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.res-title {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.res-big-value {
+  font-family: var(--font-heading);
+  font-size: 42px;
+  font-weight: 700;
+}
+
+.res-status-badge {
+  font-size: 13px;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: var(--radius-full);
+}
+
+@media (max-width: 768px) {
+  .calc-body-grid {
+    grid-template-columns: 1fr;
+  }
+}

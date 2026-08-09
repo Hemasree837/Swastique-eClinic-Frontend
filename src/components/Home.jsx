@@ -3,6 +3,7 @@ import bg from "../assets/bg.jpg";
 import heroImg from "../assets/hero.png";
 import AnnouncementMarquee from "./AnnouncementMarquee";
 import SymptomChecker from "./SymptomChecker";
+import HealthCalculators from "./HealthCalculators";
 import "./Home.css";
 
 const specialties = [
@@ -80,6 +81,9 @@ export default function Home({ user }) {
 
       {/* Interactive AI Symptom Checker */}
       <SymptomChecker />
+
+      {/* Interactive Health Calculators */}
+      <HealthCalculators />
 
       {/* Specialty Browser Section */}
       <section className="specialties-section">
