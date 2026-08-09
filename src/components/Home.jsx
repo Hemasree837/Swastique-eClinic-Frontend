@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import bg from "../assets/bg.jpg";
-import heroImg from "../assets/hero.png";
+import drHemasree from "../assets/dr_hemasree.jpg";
+import swastiqueHospital from "../assets/swastique_hospital.jpg";
 import AnnouncementMarquee from "./AnnouncementMarquee";
 import SymptomChecker from "./SymptomChecker";
 import HealthCalculators from "./HealthCalculators";
@@ -23,7 +23,7 @@ export default function Home({ user }) {
         <div className="hero-grid">
           <div className="hero-content">
             <span className="hero-badge">
-              <span className="badge-sparkle">✨</span> Modern Healthcare Platform
+              <span className="badge-sparkle">✨</span> Modern Healthcare & OPD Platform
             </span>
 
             <h1 className="hero-title">
@@ -31,7 +31,7 @@ export default function Home({ user }) {
             </h1>
 
             <p className="hero-lead">
-              Access 24/7 tele-consultations, book instant appointments with certified specialists, and manage your family's health records from one simple dashboard.
+              Access 24/7 OPD consultations with board-certified doctors like <strong>Dr. K Hemasree</strong>, book instant appointment slots, and manage digital health records from one simple dashboard.
             </p>
 
             <div className="hero-actions">
@@ -64,12 +64,12 @@ export default function Home({ user }) {
 
           <div className="hero-visual">
             <div className="hero-image-frame glass-card">
-              <img src={heroImg || bg} alt="Swastiq eClinic Healthcare" className="hero-img" />
+              <img src={drHemasree} alt="Dr. K Hemasree - Swastique eClinic" className="hero-img" />
               <div className="floating-badge badge-top">
-                <span className="icon">🟢</span> 24/7 Doctors Online
+                <span className="icon">🟢</span> OPD Active Now
               </div>
               <div className="floating-badge badge-bottom">
-                <span className="icon">⭐</span> Rated #1 Care Portal
+                <span className="icon">🩺</span> Dr. K Hemasree (OPD Lead)
               </div>
             </div>
           </div>
@@ -78,6 +78,28 @@ export default function Home({ user }) {
 
       {/* Live Marquee Ticker */}
       <AnnouncementMarquee />
+
+      {/* Hospital Facility Showcase Banner */}
+      <section className="hospital-showcase-section glass-card">
+        <div className="showcase-grid">
+          <div className="showcase-img-frame">
+            <img src={swastiqueHospital} alt="Swastique Hospital State-of-the-Art Facility" className="showcase-img" />
+          </div>
+          <div className="showcase-content">
+            <span className="showcase-tag">🏥 World-Class Infrastructure</span>
+            <h2>Welcome To Swastique Hospital</h2>
+            <p>
+              Experience compassionate, state-of-the-art care at our modern outpatient department (OPD), pharmacy, laboratory, radiology, and 24/7 emergency response center.
+            </p>
+            <div className="showcase-badges-grid">
+              <span className="sc-badge">✔️ Outpatient OPD</span>
+              <span className="sc-badge">✔️ Digital Pharmacy</span>
+              <span className="sc-badge">✔️ 24/7 Emergency</span>
+              <span className="sc-badge">✔️ Modern Lab & X-Ray</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Interactive AI Symptom Checker */}
       <SymptomChecker />

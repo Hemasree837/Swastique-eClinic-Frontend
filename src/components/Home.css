@@ -142,7 +142,7 @@
 
 .hero-img {
   width: 100%;
-  height: 380px;
+  height: 480px;
   object-fit: cover;
   border-radius: var(--radius-md);
 }
@@ -171,6 +171,72 @@
 .badge-bottom {
   bottom: 24px;
   right: 24px;
+}
+
+/* Hospital Showcase Section */
+.hospital-showcase-section {
+  padding: 36px;
+  margin: 16px 0;
+  text-align: left;
+}
+
+.showcase-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px;
+  align-items: center;
+}
+
+.showcase-img-frame {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  height: 320px;
+}
+
+.showcase-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.showcase-tag {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  background: var(--primary-light);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.showcase-content h2 {
+  font-size: 30px;
+  margin-bottom: 12px;
+}
+
+.showcase-content p {
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.showcase-badges-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.sc-badge {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-heading);
+  background: var(--bg-page);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
 }
 
 /* Section Header */
@@ -306,7 +372,7 @@
 }
 
 @media (max-width: 900px) {
-  .hero-grid {
+  .hero-grid, .showcase-grid {
     grid-template-columns: 1fr;
   }
   .hero-title {
