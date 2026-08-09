@@ -44,6 +44,25 @@ function DoctorAvatar({ name, src }) {
   );
 }
 
+function matchesSpecialty(docSpec, filterSpec) {
+  if (!docSpec || !filterSpec || filterSpec === "All Specializations") return true;
+
+  const docLower = docSpec.toLowerCase();
+  const filterLower = filterSpec.toLowerCase();
+
+  if (docLower.includes(filterLower) || filterLower.includes(docLower)) return true;
+
+  // Extract root word (e.g., "cardio", "derma", "ortho", "pediatr", "gynec", "psych", "radiolog", "ophthalm")
+  const docRoot = docLower.replace(/(ology|ologist|ics|ist|ian|ic|s)$/g, "").trim();
+  const filterRoot = filterLower.replace(/(ology|ologist|ics|ist|ian|ic|s)$/g, "").trim();
+
+  if (docRoot.length >= 3 && filterRoot.length >= 3) {
+    if (docLower.includes(filterRoot) || filterLower.includes(docRoot)) return true;
+  }
+
+  return false;
+}
+
 const specializationsList = [
   "All Specializations",
   "General Medicine",
@@ -63,7 +82,7 @@ const expertMedicalTeam = [
   {
     id: "dr_k_hemasree",
     name: "Dr. K. HEMASREE",
-    specialization: "General Physician / OPD Lead",
+    specialization: "General Medicine / OPD Lead",
     qualification: "MBBS, MD (General Medicine)",
     experience: 8,
     imageUrl: drHemasree,
@@ -83,7 +102,7 @@ const expertMedicalTeam = [
   {
     id: "dr_arjun_reddy",
     name: "Dr. ARJUN REDDY",
-    specialization: "Cardiologist",
+    specialization: "Cardiology / Cardiologist",
     qualification: "MBBS, MD (Cardiology), DM",
     experience: 12,
     imageUrl: drArjun,
@@ -93,7 +112,7 @@ const expertMedicalTeam = [
   {
     id: "dr_priyanka_nair",
     name: "Dr. PRIYANKA NAIR",
-    specialization: "Dermatologist",
+    specialization: "Dermatology / Dermatologist",
     qualification: "MBBS, MD (Dermatology)",
     experience: 7,
     imageUrl: drPriyanka,
@@ -103,7 +122,7 @@ const expertMedicalTeam = [
   {
     id: "dr_rahul_varma",
     name: "Dr. RAHUL VARMA",
-    specialization: "Orthopedic Surgeon",
+    specialization: "Orthopedics / Orthopedic Surgeon",
     qualification: "MBBS, MS (Orthopedics)",
     experience: 11,
     imageUrl: drRahul,
@@ -113,7 +132,7 @@ const expertMedicalTeam = [
   {
     id: "dr_meghana_iyer",
     name: "Dr. MEGHANA IYER",
-    specialization: "Gynecologist & Obstetrician",
+    specialization: "Gynecology & Obstetrics",
     qualification: "MBBS, MS (OBG)",
     experience: 9,
     imageUrl: drMeghana,
@@ -123,7 +142,7 @@ const expertMedicalTeam = [
   {
     id: "dr_vikram_singh",
     name: "Dr. VIKRAM SINGH",
-    specialization: "ENT Specialist",
+    specialization: "ENT / Ear, Nose & Throat Specialist",
     qualification: "MBBS, MS (ENT)",
     experience: 8,
     imageUrl: drVikram,
@@ -133,7 +152,7 @@ const expertMedicalTeam = [
   {
     id: "dr_nisha_bhat",
     name: "Dr. NISHA BHAT",
-    specialization: "Pediatrician",
+    specialization: "Pediatrics / Pediatrician",
     qualification: "MBBS, MD (Pediatrics)",
     experience: 6,
     imageUrl: drNisha,
@@ -143,7 +162,7 @@ const expertMedicalTeam = [
   {
     id: "dr_aditya_menon",
     name: "Dr. ADITYA MENON",
-    specialization: "Radiologist",
+    specialization: "Radiology / Radiologist",
     qualification: "MBBS, MD (Radiology)",
     experience: 10,
     imageUrl: drAditya,
@@ -153,7 +172,7 @@ const expertMedicalTeam = [
   {
     id: "dr_sneha_kulkarni",
     name: "Dr. SNEHA KULKARNI",
-    specialization: "Ophthalmologist",
+    specialization: "Ophthalmology / Eye Specialist",
     qualification: "MBBS, MS (Ophthalmology)",
     experience: 7,
     imageUrl: drSneha,
@@ -163,7 +182,7 @@ const expertMedicalTeam = [
   {
     id: "dr_siddharth_jose",
     name: "Dr. SIDDHARTH JOSE",
-    specialization: "Psychiatrist",
+    specialization: "Psychiatry & Neurology",
     qualification: "MBBS, MD (Psychiatry)",
     experience: 6,
     imageUrl: drSiddharth,
@@ -235,9 +254,7 @@ export default function OurDoctors({ user }) {
     const specMatch = d.specialization?.toLowerCase().includes(search.toLowerCase());
     const matchesSearch = nameMatch || specMatch;
 
-    const matchesSpecFilter =
-      selectedSpec === "All Specializations" ||
-      d.specialization?.toLowerCase().includes(selectedSpec.toLowerCase());
+    const matchesSpecFilter = matchesSpecialty(d.specialization, selectedSpec);
 
     const matchesAvailability =
       availabilityFilter === "all" ||
