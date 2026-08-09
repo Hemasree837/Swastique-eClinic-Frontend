@@ -93,7 +93,13 @@ export default function Home({ user }) {
               <div className="specialty-icon">{item.icon}</div>
               <h3>{item.title}</h3>
               <p>{item.desc}</p>
-              <Link to="/OurDoctors" className="specialty-link">Browse Specialists →</Link>
+              <Link
+                to="/OurDoctors"
+                state={{ selectedSpec: item.title }}
+                className="specialty-link"
+              >
+                Browse {item.title} Specialists →
+              </Link>
             </div>
           ))}
         </div>

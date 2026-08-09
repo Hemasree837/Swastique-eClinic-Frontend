@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import drHemasree from "../assets/dr_hemasree.jpg";
 import drJithendra from "../assets/dr_jithendra.jpg";
@@ -173,10 +173,13 @@ const expertMedicalTeam = [
 ];
 
 export default function OurDoctors({ user }) {
+  const location = useLocation();
   const [doctors, setDoctors] = useState(expertMedicalTeam);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
-  const [selectedSpec, setSelectedSpec] = useState("All Specializations");
+  const [selectedSpec, setSelectedSpec] = useState(
+    location.state?.selectedSpec || "All Specializations"
+  );
   const [availabilityFilter, setAvailabilityFilter] = useState("all");
 
   const [activeReviewDoctor, setActiveReviewDoctor] = useState(null);
@@ -184,8 +187,11 @@ export default function OurDoctors({ user }) {
   const [reviewComment, setReviewComment] = useState("");
 
   useEffect(() => {
+    if (location.state?.selectedSpec) {
+      setSelectedSpec(location.state.selectedSpec);
+    }
     fetchDoctorsFromBackend();
-  }, []);
+  }, [location.state]);
 
   const fetchDoctorsFromBackend = async () => {
     try {
