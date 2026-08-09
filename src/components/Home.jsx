@@ -3,6 +3,7 @@ import swastiqueHospital from "../assets/swastique_hospital.jpg";
 import AnnouncementMarquee from "./AnnouncementMarquee";
 import SymptomChecker from "./SymptomChecker";
 import HealthCalculators from "./HealthCalculators";
+import BedTrackerWidget from "./BedTrackerWidget";
 import "./Home.css";
 
 const specialties = [
@@ -74,6 +75,9 @@ export default function Home({ user }) {
 
       {/* Interactive Health Calculators */}
       <HealthCalculators />
+
+      {/* Emergency ER, ICU & Ward Bed Availability Live Tracker */}
+      <BedTrackerWidget user={user} />
 
       {/* Specialty Browser Section */}
       <section className="specialties-section">
