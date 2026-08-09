@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import drHemasree from "../assets/dr_hemasree.jpg";
+import drJithendra from "../assets/dr_jithendra.jpg";
 import API from "../api";
 import "./OurDoctors.css";
 
@@ -35,26 +36,133 @@ function DoctorAvatar({ name, src }) {
 const specializationsList = [
   "All Specializations",
   "General Medicine",
+  "Family Medicine",
   "Cardiology",
-  "Pediatrics",
-  "Neurology",
   "Dermatology",
   "Orthopedics",
+  "Gynecology",
+  "ENT",
+  "Pediatrics",
+  "Radiology",
+  "Ophthalmology",
+  "Psychiatry",
 ];
 
-const featuredHemasreeDoctor = {
-  id: "dr_k_hemasree",
-  name: "Dr. K Hemasree",
-  specialization: "General Medicine / OPD Lead",
-  experience: 8,
-  imageUrl: drHemasree,
-  availableSlots: ["9:00 AM", "11:30 AM", "3:00 PM", "5:30 PM"],
-  onLeave: false,
-};
+const expertMedicalTeam = [
+  {
+    id: "dr_k_hemasree",
+    name: "Dr. K. HEMASREE",
+    specialization: "General Physician / OPD Lead",
+    qualification: "MBBS, MD (General Medicine)",
+    experience: 8,
+    imageUrl: drHemasree,
+    availableSlots: ["9:00 AM", "11:30 AM", "3:00 PM", "5:30 PM"],
+    onLeave: false,
+  },
+  {
+    id: "dr_g_jithendra",
+    name: "Dr. G. JITHENDRA KUMAR",
+    specialization: "Family Medicine Specialist",
+    qualification: "MBBS, MD (Family Medicine)",
+    experience: 7,
+    imageUrl: drJithendra,
+    availableSlots: ["10:00 AM", "12:30 PM", "4:00 PM", "6:30 PM"],
+    onLeave: false,
+  },
+  {
+    id: "dr_arjun_reddy",
+    name: "Dr. ARJUN REDDY",
+    specialization: "Cardiologist",
+    qualification: "MBBS, MD (Cardiology), DM",
+    experience: 12,
+    imageUrl: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=400&auto=format&fit=crop&q=80",
+    availableSlots: ["10:00 AM", "2:00 PM", "6:00 PM"],
+    onLeave: false,
+  },
+  {
+    id: "dr_priyanka_nair",
+    name: "Dr. PRIYANKA NAIR",
+    specialization: "Dermatologist",
+    qualification: "MBBS, MD (Dermatology)",
+    experience: 7,
+    imageUrl: "https://images.unsplash.com/photo-1594824813566-88a82d02c771?w=400&auto=format&fit=crop&q=80",
+    availableSlots: ["11:00 AM", "3:30 PM", "6:30 PM"],
+    onLeave: false,
+  },
+  {
+    id: "dr_rahul_varma",
+    name: "Dr. RAHUL VARMA",
+    specialization: "Orthopedic Surgeon",
+    qualification: "MBBS, MS (Orthopedics)",
+    experience: 11,
+    imageUrl: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&auto=format&fit=crop&q=80",
+    availableSlots: ["9:30 AM", "1:00 PM", "4:30 PM"],
+    onLeave: false,
+  },
+  {
+    id: "dr_meghana_iyer",
+    name: "Dr. MEGHANA IYER",
+    specialization: "Gynecologist & Obstetrician",
+    qualification: "MBBS, MS (OBG)",
+    experience: 9,
+    imageUrl: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+    availableSlots: ["10:30 AM", "2:30 PM", "5:00 PM"],
+    onLeave: false,
+  },
+  {
+    id: "dr_vikram_singh",
+    name: "Dr. VIKRAM SINGH",
+    specialization: "ENT Specialist",
+    qualification: "MBBS, MS (ENT)",
+    experience: 8,
+    imageUrl: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=400&auto=format&fit=crop&q=80",
+    availableSlots: ["9:00 AM", "12:00 PM", "3:30 PM"],
+    onLeave: false,
+  },
+  {
+    id: "dr_nisha_bhat",
+    name: "Dr. NISHA BHAT",
+    specialization: "Pediatrician",
+    qualification: "MBBS, MD (Pediatrics)",
+    experience: 6,
+    imageUrl: "https://images.unsplash.com/photo-1594824813566-88a82d02c771?w=400&auto=format&fit=crop&q=80",
+    availableSlots: ["11:00 AM", "2:00 PM", "5:30 PM"],
+    onLeave: false,
+  },
+  {
+    id: "dr_aditya_menon",
+    name: "Dr. ADITYA MENON",
+    specialization: "Radiologist",
+    qualification: "MBBS, MD (Radiology)",
+    experience: 10,
+    imageUrl: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=400&auto=format&fit=crop&q=80",
+    availableSlots: ["9:00 AM", "1:30 PM", "4:00 PM"],
+    onLeave: false,
+  },
+  {
+    id: "dr_sneha_kulkarni",
+    name: "Dr. SNEHA KULKARNI",
+    specialization: "Ophthalmologist",
+    qualification: "MBBS, MS (Ophthalmology)",
+    experience: 7,
+    imageUrl: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+    availableSlots: ["10:00 AM", "1:00 PM", "6:00 PM"],
+    onLeave: false,
+  },
+  {
+    id: "dr_siddharth_jose",
+    name: "Dr. SIDDHARTH JOSE",
+    specialization: "Psychiatrist",
+    qualification: "MBBS, MD (Psychiatry)",
+    experience: 6,
+    imageUrl: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&auto=format&fit=crop&q=80",
+    availableSlots: ["11:30 AM", "3:00 PM", "7:00 PM"],
+    onLeave: false,
+  },
+];
 
 export default function OurDoctors({ user }) {
-  // Initialize state with Dr. K Hemasree immediately so page renders instantly!
-  const [doctors, setDoctors] = useState([featuredHemasreeDoctor]);
+  const [doctors, setDoctors] = useState(expertMedicalTeam);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedSpec, setSelectedSpec] = useState("All Specializations");
@@ -70,21 +178,19 @@ export default function OurDoctors({ user }) {
 
   const fetchDoctorsFromBackend = async () => {
     try {
-      const res = await axios.get(`${API}/doctor`, { timeout: 8000 });
+      const res = await axios.get(`${API}/doctor`, { timeout: 6000 });
       const apiDocs = res.data || [];
       
-      const hasHemasree = apiDocs.some(
-        (d) => d.name?.toLowerCase().includes("hemasree")
-      );
-
-      if (!hasHemasree) {
-        setDoctors([featuredHemasreeDoctor, ...apiDocs]);
-      } else {
-        setDoctors(apiDocs);
+      if (apiDocs.length > 0) {
+        // Merge API doctors with expertMedicalTeam avoiding duplicates by name
+        const existingNames = new Set(expertMedicalTeam.map((d) => d.name.toLowerCase()));
+        const uniqueApiDocs = apiDocs.filter(
+          (d) => !existingNames.has(d.name?.toLowerCase())
+        );
+        setDoctors([...expertMedicalTeam, ...uniqueApiDocs]);
       }
     } catch (err) {
-      console.log("Backend offline or waking up, using default roster including Dr. K Hemasree.");
-      setDoctors([featuredHemasreeDoctor]);
+      console.log("Using expert medical team roster.");
     }
   };
 
@@ -130,8 +236,9 @@ export default function OurDoctors({ user }) {
       {/* Header Banner */}
       <div className="doctors-page-header glass-card">
         <div>
-          <h2>Meet Our Specialist Doctors</h2>
-          <p>Explore board-certified medical experts, view patient ratings, and book instant appointments.</p>
+          <span className="section-subtitle">👥 Our Specialist Doctors</span>
+          <h2>Meet Our Expert Medical Team</h2>
+          <p>Compassionate. Experienced. Dedicated to Your Health.</p>
         </div>
 
         <div className="search-bar-wrapper">
@@ -204,9 +311,10 @@ export default function OurDoctors({ user }) {
               <div className="doctor-card-body">
                 <h3 className="doctor-name">{d.name}</h3>
                 <span className="doctor-specialty">{d.specialization || "General Medicine"}</span>
+                {d.qualification && <p className="doctor-qualification">🎓 {d.qualification}</p>}
                 
                 <div className="doctor-meta-row">
-                  <span className="meta-badge">🏅 {d.experience || "0"} Yrs Experience</span>
+                  <span className="meta-badge">📅 {d.experience || "0"}+ Years Experience</span>
                   <span className="meta-badge">⭐ 4.9 ({reviews.length + 12} Reviews)</span>
                 </div>
 

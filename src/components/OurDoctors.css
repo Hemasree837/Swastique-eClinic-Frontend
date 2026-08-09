@@ -185,7 +185,13 @@
   font-weight: 700;
   color: var(--primary);
   display: block;
-  margin-bottom: 12px;
+  margin-bottom: 4px;
+}
+
+.doctor-qualification {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
 }
 
 .doctor-meta-row {
