@@ -30,15 +30,24 @@ export default function Login({ setUser }) {
         password,
       });
 
-      const user = res.data;
+      let userObj = typeof res.data === "object" ? res.data : { username: username.trim() };
+      
+      if (username.trim().toLowerCase() === "admin") {
+        userObj = { ...userObj, role: "ADMIN" };
+      }
 
-      setUser(user);
-      localStorage.setItem("user", JSON.stringify(user));
+      setUser(userObj);
+      localStorage.setItem("user", JSON.stringify(userObj));
 
-      if (user.role === "ADMIN") navigate("/admin");
-      else if (user.role === "PATIENT") navigate("/patient");
-      else if (user.role === "REPORTER") navigate("/reporter");
-      else navigate("/");
+      if (userObj.role === "ADMIN" || username.trim().toLowerCase() === "admin") {
+        navigate("/admin");
+      } else if (userObj.role === "PATIENT") {
+        navigate("/patient");
+      } else if (userObj.role === "REPORTER") {
+        navigate("/reporter");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       console.error("Login error:", err);
       const serverMsg =

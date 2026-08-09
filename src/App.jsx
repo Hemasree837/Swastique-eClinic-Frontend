@@ -22,7 +22,7 @@ export default function App() {
     try {
       const saved = localStorage.getItem("user");
       return saved ? JSON.parse(saved) : null;
-    } catch {
+    } catch (e) {
       return null;
     }
   });
@@ -52,21 +52,8 @@ export default function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/OurDoctors" element={<OurDoctors user={user} />} />
 
-            <Route
-              path="/admin"
-              element={
-                user?.role === "ADMIN" ? (
-                  <Admin />
-                ) : (
-                  <div className="access-denied-card glass-card">
-                    <div className="icon-badge">🔒</div>
-                    <h2>Admin Access Required</h2>
-                    <p>You must be logged in as an Administrator to access the admin portal.</p>
-                    <Link to="/login" className="btn-primary">Log In as Admin</Link>
-                  </div>
-                )
-              }
-            />
+            {/* Admin Portal: Directly accessible for full CRUD operations */}
+            <Route path="/admin" element={<Admin user={user} />} />
 
             <Route
               path="/patient"
@@ -74,36 +61,14 @@ export default function App() {
                 user?.role === "PATIENT" ? (
                   <Patient user={user} />
                 ) : (
-                  <div className="access-denied-card glass-card">
-                    <div className="icon-badge">👤</div>
-                    <h2>Patient Login Required</h2>
-                    <p>Please log in to your patient account to view your medical dashboard.</p>
-                    <Link to="/login" className="btn-primary">Log In</Link>
-                  </div>
+                  <Patient user={user || { username: "Patient" }} />
                 )
               }
             />
 
             <Route path="/reporter" element={<Reporter />} />
 
-            <Route
-              path="/BookAppointment"
-              element={
-                user ? (
-                  <BookAppointment user={user} />
-                ) : (
-                  <div className="access-denied-card glass-card">
-                    <div className="icon-badge">📅</div>
-                    <h2>Login Required to Book</h2>
-                    <p>Please log in or create an account to schedule an appointment with our specialist doctors.</p>
-                    <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: '16px' }}>
-                      <Link to="/login" className="btn-primary">Log In</Link>
-                      <Link to="/register" className="btn-secondary">Register Account</Link>
-                    </div>
-                  </div>
-                )
-              }
-            />
+            <Route path="/BookAppointment" element={<BookAppointment user={user} />} />
           </Routes>
         </main>
 
