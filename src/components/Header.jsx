@@ -11,6 +11,8 @@ export default function Header({ user, setUser, theme, toggleTheme }) {
     navigate("/login");
   };
 
+  const isAdmin = user?.role === "ADMIN" || user?.username?.toLowerCase() === "admin";
+
   return (
     <header className="header-glass">
       <div className="header-inner">
@@ -35,11 +37,12 @@ export default function Header({ user, setUser, theme, toggleTheme }) {
             Book Appointment
           </NavLink>
 
-          {user?.role === "ADMIN" && (
+          {isAdmin && (
             <NavLink to="/admin" className={({ isActive }) => (isActive ? "nav-item active badge-admin" : "nav-item badge-admin")}>
-              Admin Panel
+              ⚙️ Admin Portal & DB Inspector
             </NavLink>
           )}
+
           {user?.role === "PATIENT" && (
             <NavLink to="/patient" className={({ isActive }) => (isActive ? "nav-item active" : "nav-item")}>
               My Dashboard
@@ -62,11 +65,11 @@ export default function Header({ user, setUser, theme, toggleTheme }) {
             </div>
           ) : (
             <div className="user-profile-menu">
-              <div className="avatar-chip">
+              <Link to={isAdmin ? "/admin" : "/patient"} className="avatar-chip" style={{ textDecoration: "none" }}>
                 <span className="avatar-char">{user.username ? user.username[0].toUpperCase() : "U"}</span>
                 <span className="user-name">{user.username}</span>
-                {user.role && <span className="role-pill">{user.role}</span>}
-              </div>
+                <span className="role-pill">{user.role || (isAdmin ? "ADMIN" : "PATIENT")}</span>
+              </Link>
               <button className="btn-logout" onClick={logout} title="Log Out">
                 Logout
               </button>
