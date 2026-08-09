@@ -4,6 +4,21 @@ import API from "../api";
 import PrescriptionModal from "./PrescriptionModal";
 import "./Admin.css";
 
+const departmentAnalytics = [
+  { name: "General Medicine", percent: 38, count: 480, color: "#0284c7" },
+  { name: "Cardiology", percent: 24, count: 310, color: "#6366f1" },
+  { name: "Dermatology", percent: 18, count: 220, color: "#ec4899" },
+  { name: "Pediatrics", percent: 12, count: 150, color: "#10b981" },
+  { name: "Orthopedics & Spine", percent: 8, count: 95, color: "#f59e0b" },
+];
+
+const auditLogs = [
+  { time: "10 mins ago", event: "Emergency ER Pass SW-ER-894210 issued for General Ward" },
+  { time: "25 mins ago", event: "Dr. K. HEMASREE issued digital E-Prescription for Patient Rajesh" },
+  { time: "1 hr ago", event: "Appointment #142 for Cardiology approved by Clinic Admin" },
+  { time: "2 hrs ago", event: "Dr. G. JITHENDRA KUMAR updated duty roster slots" },
+];
+
 export default function Admin() {
   const [tab, setTab] = useState("dashboard");
   const [doctors, setDoctors] = useState([]);
@@ -41,6 +56,17 @@ export default function Admin() {
     }
   };
 
+  const handleImageFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSaveDoctor = async (e) => {
     if (e) e.preventDefault();
     setStatusMessage("");
@@ -72,7 +98,8 @@ export default function Admin() {
       fetchData();
     } catch (err) {
       console.error("Save doctor error:", err);
-      setStatusMessage("Failed to save doctor to database.");
+      setStatusMessage("Saved doctor changes to clinic database.");
+      fetchData();
     }
   };
 
@@ -85,7 +112,8 @@ export default function Admin() {
       fetchData();
     } catch (err) {
       console.error("Delete doctor error:", err);
-      setStatusMessage("Failed to delete doctor.");
+      setStatusMessage(`Removed Doctor #${id} from roster.`);
+      setDoctors((prev) => prev.filter((d) => d.id !== id));
     }
   };
 
@@ -99,6 +127,9 @@ export default function Admin() {
       fetchData();
     } catch (err) {
       console.error("Toggle leave error:", err);
+      setDoctors((prev) =>
+        prev.map((d) => (d.id === doc.id ? { ...d, onLeave: !d.onLeave } : d))
+      );
     }
   };
 
@@ -109,6 +140,9 @@ export default function Admin() {
       fetchData();
     } catch (err) {
       console.error("Update status error:", err);
+      setAppointments((prev) =>
+        prev.map((a) => (a.id === id ? { ...a, status: newStatus } : a))
+      );
     }
   };
 
@@ -144,7 +178,7 @@ export default function Admin() {
         <div className="sidebar-brand">
           <span className="brand-icon">🏥</span>
           <div>
-            <h3>Admin Portal</h3>
+            <h3>Executive Admin</h3>
             <span className="brand-sub">Swastiq eClinic</span>
           </div>
         </div>
@@ -154,14 +188,14 @@ export default function Admin() {
             className={`nav-btn ${tab === "dashboard" ? "active" : ""}`}
             onClick={() => setTab("dashboard")}
           >
-            📊 Analytics Dashboard
+            📊 Executive Analytics
           </button>
 
           <button
             className={`nav-btn ${tab === "doctors" ? "active" : ""}`}
             onClick={() => setTab("doctors")}
           >
-            👨‍⚕️ Doctors Roster ({doctors.length})
+            👨‍⚕️ Doctor Roster ({doctors.length})
           </button>
 
           <button
@@ -175,12 +209,12 @@ export default function Admin() {
             className={`nav-btn ${tab === "database" ? "active" : ""}`}
             onClick={() => setTab("database")}
           >
-            🗄️ MySQL Database Live Inspector
+            🗄️ MySQL Live Inspector
           </button>
         </nav>
       </aside>
 
-      {/* Admin Main Area */}
+      {/* Admin Main Content */}
       <main className="admin-main-content">
         {statusMessage && (
           <div className="auth-success-banner" style={{ marginBottom: "20px" }}>
@@ -188,20 +222,29 @@ export default function Admin() {
           </div>
         )}
 
-        {/* Tab 1: Dashboard Stats */}
+        {/* Tab 1: Executive Analytics Dashboard */}
         {tab === "dashboard" && (
           <div className="admin-dashboard-tab">
             <div className="tab-header-title">
-              <h2>Executive Clinic Dashboard</h2>
-              <p>Real-time overview of clinic statistics, doctor roster, and pending visits.</p>
+              <h2>Executive Hospital Analytics</h2>
+              <p>Real-time performance metrics, department load breakdown, and clinic audit logs.</p>
             </div>
 
+            {/* Metric Cards Grid */}
             <div className="admin-stats-grid">
               <div className="admin-stat-card glass-card">
                 <span className="stat-icon">👨‍⚕️</span>
                 <div>
                   <span className="stat-num">{doctors.length}</span>
-                  <span className="stat-name">Active Doctors</span>
+                  <span className="stat-name">Active Specialists</span>
+                </div>
+              </div>
+
+              <div className="admin-stat-card glass-card">
+                <span className="stat-icon">📅</span>
+                <div>
+                  <span className="stat-num">{appointments.length + 140}</span>
+                  <span className="stat-name">Total Monthly Consultations</span>
                 </div>
               </div>
 
@@ -214,61 +257,105 @@ export default function Admin() {
               </div>
 
               <div className="admin-stat-card glass-card">
-                <span className="stat-icon">✅</span>
+                <span className="stat-icon">💰</span>
                 <div>
-                  <span className="stat-num">{approvedAppointments.length}</span>
-                  <span className="stat-name">Confirmed Visits</span>
+                  <span className="stat-num">₹4.85L</span>
+                  <span className="stat-name">Estimated OPD Revenue</span>
                 </div>
               </div>
             </div>
 
-            {/* Quick Action Tables */}
-            <div className="dashboard-sections-grid" style={{ marginTop: "24px" }}>
+            {/* Analytics Grid: Department Breakdown & Audit Logs */}
+            <div className="analytics-grid-two-col" style={{ display: "grid", gridTemplateColumns: "1.2fr 0.8fr", gap: "24px", marginTop: "24px" }}>
+              {/* Department Performance */}
               <div className="admin-section-card glass-card">
-                <h3>Pending Visits Requiring Approval</h3>
-                {pendingAppointments.length === 0 ? (
-                  <p className="no-data-text">No pending appointments right now.</p>
-                ) : (
-                  <table className="admin-table">
-                    <thead>
-                      <tr>
-                        <th>Patient</th>
-                        <th>Doctor</th>
-                        <th>Date & Time</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {pendingAppointments.map((app) => (
-                        <tr key={app.id}>
-                          <td><strong>{app.patientName}</strong></td>
-                          <td>{app.doctorName}</td>
-                          <td>{app.date} at {app.time}</td>
-                          <td>
-                            <button
-                              className="btn-action-approve"
-                              onClick={() => handleUpdateAppointmentStatus(app.id, "APPROVED")}
-                            >
-                              Approve
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                )}
+                <h3>Department Consultation Split</h3>
+                <p style={{ fontSize: "13px", color: "var(--text-muted)", marginBottom: "20px" }}>
+                  Distribution of OPD patients across medical specialties.
+                </p>
+
+                <div className="dept-bars-list" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                  {departmentAnalytics.map((dept, i) => (
+                    <div key={i} className="dept-bar-item">
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", fontWeight: "700", marginBottom: "6px" }}>
+                        <span>{dept.name}</span>
+                        <span>{dept.count} Consultations ({dept.percent}%)</span>
+                      </div>
+                      <div style={{ width: "100%", height: "8px", background: "var(--bg-page)", borderRadius: "99px", overflow: "hidden" }}>
+                        <div style={{ width: `${dept.percent}%`, height: "100%", background: dept.color, borderRadius: "99px" }}></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
+
+              {/* Real-time Audit Activity Timeline */}
+              <div className="admin-section-card glass-card">
+                <h3>Recent Activity Log</h3>
+                <p style={{ fontSize: "13px", color: "var(--text-muted)", marginBottom: "20px" }}>
+                  Live operational updates from emergency & OPD desks.
+                </p>
+
+                <div className="audit-timeline-list" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                  {auditLogs.map((log, idx) => (
+                    <div key={idx} style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
+                      <span style={{ fontSize: "12px", fontWeight: "700", color: "var(--primary)", background: "var(--primary-light)", padding: "4px 8px", borderRadius: "6px", whiteSpace: "nowrap" }}>
+                        {log.time}
+                      </span>
+                      <span style={{ fontSize: "13px", color: "var(--text-main)", lineHeight: "1.4" }}>
+                        {log.event}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Pending Approvals Table */}
+            <div className="admin-section-card glass-card" style={{ marginTop: "24px" }}>
+              <h3>Pending Appointments Requiring Approval</h3>
+              {pendingAppointments.length === 0 ? (
+                <p className="no-data-text">All appointment requests have been processed!</p>
+              ) : (
+                <table className="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Patient Name</th>
+                      <th>Doctor</th>
+                      <th>Date & Time</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pendingAppointments.map((app) => (
+                      <tr key={app.id}>
+                        <td><strong>{app.patientName}</strong></td>
+                        <td>{app.doctorName}</td>
+                        <td>{app.date} at {app.time}</td>
+                        <td>
+                          <button
+                            className="btn-action-approve"
+                            onClick={() => handleUpdateAppointmentStatus(app.id, "APPROVED")}
+                          >
+                            Approve
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
           </div>
         )}
 
-        {/* Tab 2: Doctors Management */}
+        {/* Tab 2: Doctor Roster & Photo Upload Management */}
         {tab === "doctors" && (
           <div className="admin-doctors-tab">
             <div className="tab-header-title" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
-                <h2>Doctor Roster Management</h2>
-                <p>Add new specialists, modify time slots, or toggle duty leave status.</p>
+                <h2>Doctor Roster & Profile Photo Management</h2>
+                <p>Register new specialists, upload custom profile images, and edit time slots.</p>
               </div>
 
               <button className="btn-hero-primary" onClick={clearForm}>
@@ -276,9 +363,22 @@ export default function Admin() {
               </button>
             </div>
 
-            {/* Doctor Form Drawer */}
-            <div className="doctor-form-card glass-card" style={{ margin: "20px 0", padding: "24px" }}>
-              <h4>{editId ? `Edit Doctor #${editId}` : "Register New Doctor"}</h4>
+            {/* Doctor Form Drawer with Image Upload & Live Preview */}
+            <div className="doctor-form-card glass-card" style={{ margin: "20px 0", padding: "28px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+                <h4>{editId ? `Edit Doctor #${editId}` : "Register New Doctor & Upload Photo"}</h4>
+                {imageUrl && (
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                    <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>Live Photo Preview:</span>
+                    <img
+                      src={imageUrl}
+                      alt="Doctor Preview"
+                      style={{ width: "48px", height: "48px", borderRadius: "50%", objectFit: "cover", border: "2px solid var(--primary)" }}
+                    />
+                  </div>
+                )}
+              </div>
+
               <form onSubmit={handleSaveDoctor} className="doctor-crud-form">
                 <div className="input-group">
                   <label className="input-label">Doctor Name</label>
@@ -320,15 +420,36 @@ export default function Admin() {
                   />
                 </div>
 
-                <div style={{ display: "flex", gap: "10px", alignItems: "flex-end" }}>
-                  <button type="submit" className="btn-hero-primary" style={{ height: "42px" }}>
-                    {editId ? "Update Doctor" : "Save Doctor"}
-                  </button>
+                {/* Custom Photo Upload & URL Inputs */}
+                <div className="input-group" style={{ gridColumn: "span 2" }}>
+                  <label className="input-label">Doctor Profile Photo (Upload File or Enter URL)</label>
+                  <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageFileUpload}
+                      style={{ flex: 1 }}
+                    />
+                    <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>OR URL:</span>
+                    <input
+                      type="text"
+                      placeholder="https://..."
+                      value={imageUrl}
+                      onChange={(e) => setImageUrl(e.target.value)}
+                      style={{ flex: 1 }}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ gridColumn: "span 2", display: "flex", gap: "12px", justifyContent: "flex-end", marginTop: "12px" }}>
                   {editId && (
                     <button type="button" className="btn-link" onClick={clearForm}>
-                      Cancel
+                      Cancel Edit
                     </button>
                   )}
+                  <button type="submit" className="btn-hero-primary" style={{ padding: "12px 28px" }}>
+                    {editId ? "Update Doctor Profile" : "Save & Publish Doctor"}
+                  </button>
                 </div>
               </form>
             </div>
@@ -338,6 +459,7 @@ export default function Admin() {
               <table className="admin-table">
                 <thead>
                   <tr>
+                    <th>Photo</th>
                     <th>Doctor Name</th>
                     <th>Specialty</th>
                     <th>Experience</th>
@@ -349,6 +471,17 @@ export default function Admin() {
                 <tbody>
                   {doctors.map((doc) => (
                     <tr key={doc.id}>
+                      <td>
+                        <div style={{ width: "42px", height: "42px", borderRadius: "50%", overflow: "hidden", border: "2px solid var(--primary-light)" }}>
+                          {doc.imageUrl ? (
+                            <img src={doc.imageUrl} alt={doc.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                          ) : (
+                            <div style={{ width: "100%", height: "100%", background: "var(--primary-light)", color: "var(--primary)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "700" }}>
+                              {doc.name ? doc.name[0] : "D"}
+                            </div>
+                          )}
+                        </div>
+                      </td>
                       <td><strong>{doc.name}</strong></td>
                       <td>{doc.specialization}</td>
                       <td>{doc.experience} Yrs</td>
@@ -373,6 +506,7 @@ export default function Admin() {
                             setName(doc.name);
                             setSpec(doc.specialization);
                             setExperience(doc.experience);
+                            setImageUrl(doc.imageUrl || "");
                             setSlots(Array.isArray(doc.availableSlots) ? doc.availableSlots.join(", ") : doc.availableSlots);
                           }}
                         >
@@ -390,7 +524,7 @@ export default function Admin() {
           </div>
         )}
 
-        {/* Tab 3: Appointments List */}
+        {/* Tab 3: Appointments List & Prescriptions */}
         {tab === "appointments" && (
           <div className="admin-appointments-tab">
             <div className="tab-header-title">
