@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import drHemasree from "../assets/dr_hemasree.jpg";
 import API from "../api";
 import "./OurDoctors.css";
 
@@ -33,13 +34,23 @@ function DoctorAvatar({ name, src }) {
 
 const specializationsList = [
   "All Specializations",
-  "Cardiology",
   "General Medicine",
+  "Cardiology",
   "Pediatrics",
   "Neurology",
   "Dermatology",
   "Orthopedics",
 ];
+
+const featuredHemasreeDoctor = {
+  id: "dr_k_hemasree",
+  name: "Dr. K Hemasree",
+  specialization: "General Medicine / OPD Lead",
+  experience: 8,
+  imageUrl: drHemasree,
+  availableSlots: ["9:00 AM", "11:30 AM", "3:00 PM", "5:30 PM"],
+  onLeave: false,
+};
 
 export default function OurDoctors({ user }) {
   const [doctors, setDoctors] = useState([]);
@@ -60,9 +71,21 @@ export default function OurDoctors({ user }) {
     setLoading(true);
     try {
       const res = await axios.get(`${API}/doctor`);
-      setDoctors(res.data || []);
+      const apiDocs = res.data || [];
+      
+      // Ensure Dr. K Hemasree is featured at the top if not already present from backend
+      const hasHemasree = apiDocs.some(
+        (d) => d.name?.toLowerCase().includes("hemasree")
+      );
+
+      if (!hasHemasree) {
+        setDoctors([featuredHemasreeDoctor, ...apiDocs]);
+      } else {
+        setDoctors(apiDocs);
+      }
     } catch (err) {
       console.error("Error fetching doctors:", err);
+      setDoctors([featuredHemasreeDoctor]);
     } finally {
       setLoading(false);
     }
@@ -95,7 +118,7 @@ export default function OurDoctors({ user }) {
 
     const matchesSpecFilter =
       selectedSpec === "All Specializations" ||
-      d.specialization?.toLowerCase() === selectedSpec.toLowerCase();
+      d.specialization?.toLowerCase().includes(selectedSpec.toLowerCase());
 
     const matchesAvailability =
       availabilityFilter === "all" ||
