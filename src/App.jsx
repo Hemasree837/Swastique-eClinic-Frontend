@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import Header from "./components/Header";
@@ -40,6 +40,8 @@ export default function App() {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
+  const isAdmin = user?.role === "ADMIN" || user?.username?.toLowerCase() === "admin";
+
   return (
     <Router>
       <div className="app">
@@ -47,13 +49,15 @@ export default function App() {
 
         <main className="content">
           <Routes>
-            <Route path="/" element={<Home user={user} />} />
+            {/* If Admin is logged in, dedicate all main routes exclusively to the Executive Admin Console */}
+            <Route path="/" element={isAdmin ? <Admin user={user} /> : <Home user={user} />} />
+            <Route path="/admin" element={<Admin user={user} />} />
+
             <Route path="/login" element={<Login setUser={setUser} />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/OurDoctors" element={<OurDoctors user={user} />} />
 
-            {/* Admin Portal: Directly accessible for full CRUD operations */}
-            <Route path="/admin" element={<Admin user={user} />} />
+            <Route path="/OurDoctors" element={isAdmin ? <Navigate to="/admin" replace /> : <OurDoctors user={user} />} />
+            <Route path="/BookAppointment" element={isAdmin ? <Navigate to="/admin" replace /> : <BookAppointment user={user} />} />
 
             <Route
               path="/patient"
@@ -67,8 +71,6 @@ export default function App() {
             />
 
             <Route path="/reporter" element={<Reporter />} />
-
-            <Route path="/BookAppointment" element={<BookAppointment user={user} />} />
           </Routes>
         </main>
 
