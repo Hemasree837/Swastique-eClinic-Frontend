@@ -1,8 +1,19 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
 import drHemasree from "../assets/dr_hemasree.jpg";
 import drJithendra from "../assets/dr_jithendra.jpg";
+import drArjun from "../assets/dr_arjun.jpg";
+import drPriyanka from "../assets/dr_priyanka.jpg";
+import drRahul from "../assets/dr_rahul.jpg";
+import drMeghana from "../assets/dr_meghana.jpg";
+import drVikram from "../assets/dr_vikram.jpg";
+import drNisha from "../assets/dr_nisha.jpg";
+import drAditya from "../assets/dr_aditya.jpg";
+import drSneha from "../assets/dr_sneha.jpg";
+import drSiddharth from "../assets/dr_siddharth.jpg";
+
 import API from "../api";
 import "./OurDoctors.css";
 
@@ -75,7 +86,7 @@ const expertMedicalTeam = [
     specialization: "Cardiologist",
     qualification: "MBBS, MD (Cardiology), DM",
     experience: 12,
-    imageUrl: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=400&auto=format&fit=crop&q=80",
+    imageUrl: drArjun,
     availableSlots: ["10:00 AM", "2:00 PM", "6:00 PM"],
     onLeave: false,
   },
@@ -85,7 +96,7 @@ const expertMedicalTeam = [
     specialization: "Dermatologist",
     qualification: "MBBS, MD (Dermatology)",
     experience: 7,
-    imageUrl: "https://images.unsplash.com/photo-1594824813566-88a82d02c771?w=400&auto=format&fit=crop&q=80",
+    imageUrl: drPriyanka,
     availableSlots: ["11:00 AM", "3:30 PM", "6:30 PM"],
     onLeave: false,
   },
@@ -95,7 +106,7 @@ const expertMedicalTeam = [
     specialization: "Orthopedic Surgeon",
     qualification: "MBBS, MS (Orthopedics)",
     experience: 11,
-    imageUrl: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&auto=format&fit=crop&q=80",
+    imageUrl: drRahul,
     availableSlots: ["9:30 AM", "1:00 PM", "4:30 PM"],
     onLeave: false,
   },
@@ -105,7 +116,7 @@ const expertMedicalTeam = [
     specialization: "Gynecologist & Obstetrician",
     qualification: "MBBS, MS (OBG)",
     experience: 9,
-    imageUrl: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+    imageUrl: drMeghana,
     availableSlots: ["10:30 AM", "2:30 PM", "5:00 PM"],
     onLeave: false,
   },
@@ -115,7 +126,7 @@ const expertMedicalTeam = [
     specialization: "ENT Specialist",
     qualification: "MBBS, MS (ENT)",
     experience: 8,
-    imageUrl: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=400&auto=format&fit=crop&q=80",
+    imageUrl: drVikram,
     availableSlots: ["9:00 AM", "12:00 PM", "3:30 PM"],
     onLeave: false,
   },
@@ -125,7 +136,7 @@ const expertMedicalTeam = [
     specialization: "Pediatrician",
     qualification: "MBBS, MD (Pediatrics)",
     experience: 6,
-    imageUrl: "https://images.unsplash.com/photo-1594824813566-88a82d02c771?w=400&auto=format&fit=crop&q=80",
+    imageUrl: drNisha,
     availableSlots: ["11:00 AM", "2:00 PM", "5:30 PM"],
     onLeave: false,
   },
@@ -135,7 +146,7 @@ const expertMedicalTeam = [
     specialization: "Radiologist",
     qualification: "MBBS, MD (Radiology)",
     experience: 10,
-    imageUrl: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=400&auto=format&fit=crop&q=80",
+    imageUrl: drAditya,
     availableSlots: ["9:00 AM", "1:30 PM", "4:00 PM"],
     onLeave: false,
   },
@@ -145,7 +156,7 @@ const expertMedicalTeam = [
     specialization: "Ophthalmologist",
     qualification: "MBBS, MS (Ophthalmology)",
     experience: 7,
-    imageUrl: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+    imageUrl: drSneha,
     availableSlots: ["10:00 AM", "1:00 PM", "6:00 PM"],
     onLeave: false,
   },
@@ -155,7 +166,7 @@ const expertMedicalTeam = [
     specialization: "Psychiatrist",
     qualification: "MBBS, MD (Psychiatry)",
     experience: 6,
-    imageUrl: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&auto=format&fit=crop&q=80",
+    imageUrl: drSiddharth,
     availableSlots: ["11:30 AM", "3:00 PM", "7:00 PM"],
     onLeave: false,
   },
@@ -182,7 +193,6 @@ export default function OurDoctors({ user }) {
       const apiDocs = res.data || [];
       
       if (apiDocs.length > 0) {
-        // Merge API doctors with expertMedicalTeam avoiding duplicates by name
         const existingNames = new Set(expertMedicalTeam.map((d) => d.name.toLowerCase()));
         const uniqueApiDocs = apiDocs.filter(
           (d) => !existingNames.has(d.name?.toLowerCase())
