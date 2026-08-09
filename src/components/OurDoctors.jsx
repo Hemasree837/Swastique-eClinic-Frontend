@@ -53,8 +53,9 @@ const featuredHemasreeDoctor = {
 };
 
 export default function OurDoctors({ user }) {
-  const [doctors, setDoctors] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // Initialize state with Dr. K Hemasree immediately so page renders instantly!
+  const [doctors, setDoctors] = useState([featuredHemasreeDoctor]);
+  const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedSpec, setSelectedSpec] = useState("All Specializations");
   const [availabilityFilter, setAvailabilityFilter] = useState("all");
@@ -64,16 +65,14 @@ export default function OurDoctors({ user }) {
   const [reviewComment, setReviewComment] = useState("");
 
   useEffect(() => {
-    getDoctors();
+    fetchDoctorsFromBackend();
   }, []);
 
-  const getDoctors = async () => {
-    setLoading(true);
+  const fetchDoctorsFromBackend = async () => {
     try {
-      const res = await axios.get(`${API}/doctor`);
+      const res = await axios.get(`${API}/doctor`, { timeout: 8000 });
       const apiDocs = res.data || [];
       
-      // Ensure Dr. K Hemasree is featured at the top if not already present from backend
       const hasHemasree = apiDocs.some(
         (d) => d.name?.toLowerCase().includes("hemasree")
       );
@@ -84,10 +83,8 @@ export default function OurDoctors({ user }) {
         setDoctors(apiDocs);
       }
     } catch (err) {
-      console.error("Error fetching doctors:", err);
+      console.log("Backend offline or waking up, using default roster including Dr. K Hemasree.");
       setDoctors([featuredHemasreeDoctor]);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -177,25 +174,6 @@ export default function OurDoctors({ user }) {
           </button>
         </div>
       </div>
-
-      {/* Loading & Empty States */}
-      {loading && (
-        <div className="loading-state glass-card">
-          <span className="spinner">🩺</span>
-          <p>Loading doctor roster from clinic database...</p>
-        </div>
-      )}
-
-      {!loading && filteredDoctors.length === 0 && (
-        <div className="empty-doctors-card glass-card">
-          <span className="empty-icon">👨‍⚕️</span>
-          <h3>No Doctors Match Your Search</h3>
-          <p>Try clearing filters or searching for a different medical specialty.</p>
-          <button className="btn-hero-secondary" onClick={() => { setSearch(""); setSelectedSpec("All Specializations"); setAvailabilityFilter("all"); }}>
-            Reset All Filters
-          </button>
-        </div>
-      )}
 
       {/* Doctors Grid */}
       <div className="doctors-grid">
